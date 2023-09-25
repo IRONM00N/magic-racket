@@ -1,4 +1,4 @@
-# Magic Racket for VS Code
+# Magic Racket HTDP for VS Code
 
 This extension adds support for [Racket](http://www.racket-lang.org) to VS Code. With the newly added support for language server protocol, we're proud to say that Magic Racket is **the best** Racket extension for VS Code.
 

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 // eslint-disable-next-line no-unused-vars
-import { LanguageClient, LanguageClientOptions } from "vscode-languageclient/node";
 import * as os from "os";
+import { LanguageClient, LanguageClientOptions } from "vscode-languageclient/node";
 import * as com from "./commands";
 import { TaskProvider } from "./tasks";
 import { withLanguageServer } from "./utils";
@@ -100,8 +100,8 @@ export function activate(context: vscode.ExtensionContext): void {
   // Each file has one output terminal and one repl
   // Those two are saved in terminals and repls, respectively
   // The file is _ran_ in the terminal and _loaded_ into a repl
-  const terminals: Map<string, vscode.Terminal> = new Map();
-  const repls: Map<string, vscode.Terminal> = new Map();
+  const terminals = new Map<string, vscode.Terminal>();
+  const repls= new Map<string, vscode.Terminal>();
 
   vscode.workspace.onDidChangeConfiguration(configurationChanged);
 
