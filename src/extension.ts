@@ -101,7 +101,7 @@ export function activate(context: vscode.ExtensionContext): void {
   // Those two are saved in terminals and repls, respectively
   // The file is _ran_ in the terminal and _loaded_ into a repl
   const terminals = new Map<string, vscode.Terminal>();
-  const repls= new Map<string, vscode.Terminal>();
+  const repls = new Map<string, vscode.Terminal>();
 
   vscode.workspace.onDidChangeConfiguration(configurationChanged);
 
@@ -114,9 +114,17 @@ export function activate(context: vscode.ExtensionContext): void {
 
   const loadInRepl = reg("loadFileInRepl", () => com.loadInRepl(repls));
   const runInTerminal = reg("runFile", () => com.runInTerminal(terminals));
+  const testFile = reg("testFile", () => com.testFile(terminals));
   const executeSelection = reg("executeSelectionInRepl", () => com.executeSelection(repls));
   const openRepl = reg("openRepl", () => com.openRepl(repls));
   const showOutput = reg("showOutputTerminal", () => com.showOutput(terminals));
 
-  context.subscriptions.push(loadInRepl, runInTerminal, executeSelection, openRepl, showOutput);
+  context.subscriptions.push(
+    loadInRepl,
+    runInTerminal,
+    testFile,
+    executeSelection,
+    openRepl,
+    showOutput,
+  );
 }

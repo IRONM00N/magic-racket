@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 import {
-  createTerminal,
-  runFileInTerminal,
   createRepl,
-  loadFileInRepl,
+  createTerminal,
   executeSelectionInRepl,
+  loadFileInRepl,
+  runFileInTerminal,
 } from "./repl";
-import { withFilePath, withRacket, withEditor, withREPL } from "./utils";
+import { withEditor, withFilePath, withREPL, withRacket, withRaco } from "./utils";
 
 function getOrDefault<K, V>(map: Map<K, V>, key: K, getDefault: () => V): V {
   const value = map.get(key);
@@ -22,20 +22,30 @@ function saveActiveTextEditorAndRun(f: () => void) {
   vscode.window.activeTextEditor?.document?.save().then(() => f());
 }
 
+function getTerminal(terminals: Map<string, vscode.Terminal>, filePath: string): vscode.Terminal {
+  return vscode.workspace
+    .getConfiguration("magicRacket.outputTerminal")
+    .get("numberOfOutputTerminals") === "one"
+    ? getOrDefault(terminals, "one", () => createTerminal(null))
+    : getOrDefault(terminals, filePath, () => createTerminal(filePath));
+}
+
 export function runInTerminal(terminals: Map<string, vscode.Terminal>): void {
   withFilePath((filePath: string) => {
     withRacket((command: string[]) => {
-      let terminal: vscode.Terminal;
-      if (
-        vscode.workspace
-          .getConfiguration("magicRacket.outputTerminal")
-          .get("numberOfOutputTerminals") === "one"
-      ) {
-        terminal = getOrDefault(terminals, "one", () => createTerminal(null));
-      } else {
-        terminal = getOrDefault(terminals, filePath, () => createTerminal(filePath));
-      }
+      const terminal = getTerminal(terminals, filePath);
+
       saveActiveTextEditorAndRun(() => runFileInTerminal(command, filePath, terminal));
+    });
+  });
+}
+
+export function testFile(terminals: Map<string, vscode.Terminal>): void {
+  withFilePath((filePath: string) => {
+    withRaco((command: string[]) => {
+      const terminal = getTerminal(terminals, filePath);
+
+      saveActiveTextEditorAndRun(() => runFileInTerminal([...command, "test"], filePath, terminal));
     });
   });
 }
