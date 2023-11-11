@@ -1,0 +1,2165 @@
+{
+  "name": "Racket Student Language",
+  "scopeName": "source.racket-sl",
+  "firstLineMatch": "#lang htdp/[bia]sl\\+?",
+  "filetypes": [
+    "rkt"
+  ],
+  "patterns": [
+    {
+      "include": "#expression"
+    },
+    {
+      "name": "keyword.other.racket",
+      "match": "^#lang"
+    }
+  ],
+  "repository": {
+    "expression": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#not-atom"
+        },
+        {
+          "include": "#atom"
+        },
+        {
+          "include": "#quote"
+        }
+      ]
+    },
+    "atom": {
+      "patterns": [
+        {
+          "include": "#bool"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#keyword"
+        },
+        {
+          "include": "#character"
+        },
+        {
+          "include": "#symbol"
+        },
+        {
+          "include": "#variable"
+        },
+        {
+          "include": "#signature"
+        }
+      ]
+    },
+    "not-atom": {
+      "patterns": [
+        {
+          "include": "#vector"
+        },
+        {
+          "include": "#hash"
+        },
+        {
+          "include": "#prefab-struct"
+        },
+        {
+          "include": "#list"
+        },
+        {
+          "name": "keyword.control.racket",
+          "match": "(?x) (?<=^|[()\\[\\]{}\\\",'`;\\s])\n  (?: \\#[cC][iI] | \\#[cC][sS])\n(?=\\s)"
+        },
+        {
+          "name": "support.function.racket",
+          "match": "(?x) (?<=^|[()\\[\\]{}\\\",'`;\\s])\n  (?: \\#&)"
+        }
+      ]
+    },
+    "quote": {
+      "patterns": [
+        {
+          "name": "support.function.racket",
+          "match": "(?x) (?<=^|[()\\[\\]{}\\\",'`;\\s]) (?: ,@ | ' | ` | , | \\#' | \\#` | \\#, | \\#~ | \\#,@)+ (?=[()\\[\\]{}\\\",'`;\\s] | \\#[^%] | [^()\\[\\]{}\",'`;\\s] )"
+        }
+      ]
+    },
+    "symbol": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.racket",
+          "begin": "(?x) (?<=^|[()\\[\\]{}\",;\\s]) (?: ` | ' )+(\\|)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.verbatim.begin.racket"
+            }
+          },
+          "end": "\\|",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.verbatim.end.racket"
+            }
+          }
+        },
+        {
+          "name": "string.quoted.single.racket",
+          "begin": "(?x) (?<=^|[()\\[\\]{}\",;\\s]) (?: ` | ' )+ (?: \\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])",
+          "end": "(?=[()\\[\\]{}\",'`;\\s])",
+          "patterns": [
+            {
+              "match": "\\\\ "
+            },
+            {
+              "begin": "\\|",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.verbatim.begin.racket"
+                }
+              },
+              "end": "\\|",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.verbatim.end.racket"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "format": {
+      "patterns": [
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (e?printf | format) \\s* (\")",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.racket"
+            },
+            "2": {
+              "name": "string.quoted.double.racket"
+            }
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": {
+              "name": "string.quoted.double.racket"
+            }
+          },
+          "contentName": "string.quoted.double.racket",
+          "patterns": [
+            {
+              "include": "#format-string"
+            },
+            {
+              "include": "#escape-char"
+            }
+          ]
+        }
+      ]
+    },
+    "builtin-functions": {
+      "patterns": [
+        {
+          "include": "#format"
+        },
+        {
+          "include": "#struct"
+        },
+        {
+          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  : | signature | mixed | - | < | <= | > | >= | abs | acos | add1 | angle | asin | atan | ceiling | complex\\? | conjugate | cos | cosh | \n  current-seconds | denominator | even\\? | exact->inexact | exact\\? | exp | expt | floor | gcd | imag-part | inexact->exact | inexact\\? | \n  integer->char | integer-sqrt | integer\\? | lcm | log | magnitude | make-polar | make-rectangular | max | min | modulo | negative\\? | \n  number->string | number->string-digits | number\\? | numerator | odd\\? | positive\\? | quotient | random | rational\\? | real-part | real? | \n  remainder | round | sgn | sin | sinh | sqr | sqrt | sub1 | tan | zero\\? | boolean->string | boolean=\\? | boolean\\? | false\\? | not | \n  symbol->string | symbol=\\? | symbol\\? | append | assoc | assq | caaar | caadr | caar | cadar | cadddr | caddr | cadr | car | cdaar | cdadr | \n  cdar | cddar | cdddr | cddr | cdr | cons | cons\\? | eighth | empty\\? | fifth | first | for-each | fourth | length | list | list\\* | list-ref |\n  list\\? | make-list | member | member\\? | memq | memq\\? | memv | null\\? | range | remove | remove-all | rest | reverse | second | seventh |\n  sixth | third | make-posn | posn-x | posn-y | posn\\? | set-posn-x! | set-posn-y! | char->integer | char-alphabetic? | char-ci<=\\? | \n  char-ci<\\? | char-ci=\\? | char-ci>=\\? | char-ci>\\? | char-downcase | char-lower-case\\? | char-numeric\\? | char-upcase | char-upper-case\\? |\n  char-whitespace\\? | char<=\\? | char<\\? | char=\\? | char>=\\? | char>\\? | char\\? | explode | implode | int->string | list->string | \n  make-string | replicate | string | string->int | string->list | string->number | string->symbol | string-alphabetic\\? | string-contains-ci\\? |\n  string-contains\\? | string-copy | string-downcase | string-ith | string-length | string-lower-case? | string-numeric? | string-ref | \n  string-upcase | string-upper-case\\? | string-whitespace\\? | string\\? | substring | image=\\? | image\\? | =~ | current-milliseconds | \n  eof-object\\? | eq\\? | equal\\? | equal\\~? | eqv\\? | error | exit | force | gensym | identity | promise\\? | sleep | struct\\? | void |\n  string-append | string-ci<=\\? | string-ci<\\? | string-ci=\\? | string-ci>=\\? | string-ci>\\? | string<=\\? | string<\\? | string=\\? |\n  string>=\\? | string>\\? | posn | \\* | \\+ | \\/ | = | andmap | apply | argmax | argmin | build-list | build-string | compose | filter |\n  foldl | foldr | map | memf | ormap | procedure\\? | quicksort | sort | display | newline | pretty-print | print | read | with-input-from-file |\n  with-input-from-string | with-output-to-file | with-output-to-string | write | build-vector | list->vector | make-vector | vector | vector->list |\n  vector-length | vector-ref | vector-set! | vector\\? | box | box\\? | set-box! | unbox | hash-copy | hash-count | hash-eq\\? | hash-equal\\? |\n  hash-eqv\\? | hash-for-each | hash-has-key\\? | hash-map | hash-ref | hash-ref! | hash-remove | hash-remove! | hash-set | hash-set! | \n  hash-update | hash-update! | hash\\? | make-hash | make-hasheq | make-hasheqv | make-immutable-hash | make-immutable-hasheq | \n  make-immutable-hasheqv | and | or\n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "support.function.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  in-range | in-naturals\n) (?=$|[()\\[\\]{}\\\",'`;\\s])   ",
+          "captures": {
+            "1": {
+              "name": null
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  check-expect | check-random | check-within | check-error | check-member-of | check-satisfied | check-range | check-range\n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "support.function.racket"
+            }
+          }
+        }
+      ]
+    },
+    "builtin-variables": {
+      "patterns": [
+        {
+          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) () (?<=$|[()\\[\\]{}\\\",'`;\\s])"
+        }
+      ]
+    },
+    "syntax": {
+      "patterns": [
+        {
+          "include": "#define"
+        },
+        {
+          "include": "#let"
+        },
+        {
+          "include": "#lambda"
+        },
+        {
+          "include": "#set-var"
+        },
+        {
+          "include": "#control"
+        },
+        {
+          "match": "(?x) (?<=[(\\[{]) \\s* (local) \\s+ (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.local.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=[(\\[{]) \\s* (begin|begin0) \\s+ (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.begin.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=[(\\[{]) \\s* (time) \\s+ (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.time.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  ListOf | ConsOf\n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "support.function.a.racket"
+            }
+          }
+        }
+      ]
+    },
+    "control": {
+      "patterns": [
+        {
+          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  \\#%require | require | local-require\n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.control.require.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  \\#%provide | provide\n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.control.provide.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  cond | else | match | if | when | unless | case | choice \n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.control.conditional.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  for/list | for\\*/list | for/or | for\\*/or | for/and | for\\*/and |\n  for/sum | for*/sum | for/product | for*/product | for/string | \n  for*/string   \n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.control.flow.racket"
+            }
+          }
+        }
+      ]
+    },
+    "define": {
+      "patterns": [
+        {
+          "include": "#define-func"
+        },
+        {
+          "include": "#define-vals"
+        },
+        {
+          "include": "#define-val"
+        },
+        {
+          "include": "#define-struct"
+        }
+      ]
+    },
+    "define-struct": {
+      "patterns": [
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (define-struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) \\s* (\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.racket"
+            },
+            "2": {
+              "name": "entity.name.type.struct.racket"
+            },
+            "3": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#define-struct-fields"
+            }
+          ]
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (define-struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) \\s* (\\[)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.racket"
+            },
+            "2": {
+              "name": "entity.name.type.struct.racket"
+            },
+            "3": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#define-struct-fields"
+            }
+          ]
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (define-struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) \\s* (\\{)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.racket"
+            },
+            "2": {
+              "name": "entity.name.type.struct.racket"
+            },
+            "3": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#define-struct-fields"
+            }
+          ]
+        }
+      ]
+    },
+    "define-struct-fields": {
+      "patterns": [
+        {
+          "include": "#keyword"
+        },
+        {
+          "include": "#comment"
+        },
+        {
+          "name": "variable.other.member.racket",
+          "match": "[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*"
+        }
+      ]
+    },
+    "define-val": {
+      "patterns": [
+        {
+          "match": "(?x) (?<=[(\\[{]) \\s* (define(?: (?: -for)?-syntax)?) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)",
+          "captures": {
+            "1": {
+              "name": "storage.type.make-struct.racket"
+            },
+            "2": {
+              "name": "entity.name.variable.racket"
+            }
+          }
+        }
+      ]
+    },
+    "define-vals": {
+      "patterns": [
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (define-(?: values(?: -for-syntax)? | syntaxes)?) \\s* (\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "name": "entity.name.variable.racket",
+              "match": "[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*"
+            }
+          ]
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (define-(?: values(?: -for-syntax)? | syntaxes)?) \\s* (\\[)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "name": "entity.name.variable.racket",
+              "match": "[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*"
+            }
+          ]
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (define-(?: values(?: -for-syntax)? | syntaxes)?) \\s* ({)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "name": "entity.name.variable.racket",
+              "match": "[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*"
+            }
+          ]
+        }
+      ]
+    },
+    "let": {
+      "patterns": [
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (let | let\\* | letrec | shared) \\s+ (\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.let.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "begin": "^\\s*(\\()\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.section.begin.racket"
+                },
+                "2": {
+                  "name": "entity.name.variable.racket"
+                }
+              },
+              "end": "\\)",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.begin.racket"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            },
+            {
+              "begin": "^\\s*(\\[)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.section.begin.racket"
+                },
+                "2": {
+                  "name": "entity.name.variable.racket"
+                }
+              },
+              "end": "\\]",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.begin.racket"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            },
+            {
+              "begin": "^\\s*({)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.section.begin.racket"
+                },
+                "2": {
+                  "name": "entity.name.variable.racket"
+                }
+              },
+              "end": "}",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.begin.racket"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (let | let\\* | letrec | shared) \\s+ (\\[)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.let.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "begin": "^\\s*(\\()\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.section.begin.racket"
+                },
+                "2": {
+                  "name": "entity.name.variable.racket"
+                }
+              },
+              "end": "\\)",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.begin.racket"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            },
+            {
+              "begin": "^\\s*(\\[)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.section.begin.racket"
+                },
+                "2": {
+                  "name": "entity.name.variable.racket"
+                }
+              },
+              "end": "\\]",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.begin.racket"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            },
+            {
+              "begin": "^\\s*({)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.section.begin.racket"
+                },
+                "2": {
+                  "name": "entity.name.variable.racket"
+                }
+              },
+              "end": "}",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.begin.racket"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (let | let\\* | letrec | shared) \\s+ ({)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.let.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "begin": "^\\s*(\\()\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.section.begin.racket"
+                },
+                "2": {
+                  "name": "entity.name.variable.racket"
+                }
+              },
+              "end": "\\)",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.begin.racket"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            },
+            {
+              "begin": "^\\s*(\\[)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.section.begin.racket"
+                },
+                "2": {
+                  "name": "entity.name.variable.racket"
+                }
+              },
+              "end": "\\]",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.begin.racket"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            },
+            {
+              "begin": "^\\s*({)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.section.begin.racket"
+                },
+                "2": {
+                  "name": "entity.name.variable.racket"
+                }
+              },
+              "end": "}",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.begin.racket"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "set-var": {
+      "patterns": [
+        {
+          "match": "(?x) (?<=[(\\[{]) \\s* (set!) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.set.racket"
+            },
+            "2": {
+              "name": "entity.name.variable.racket"
+            }
+          }
+        }
+      ]
+    },
+    "define-func": {
+      "patterns": [
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (define (?: (?: -for)?-syntax)?) \\s* (\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.lambda.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#func-args"
+            }
+          ]
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (define (?: (?: -for)?-syntax)?) \\s* (\\[)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.lambda.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#func-args"
+            }
+          ]
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (define (?: (?: -for)?-syntax)?) \\s* ({)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.lambda.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#func-args"
+            }
+          ]
+        }
+      ]
+    },
+    "func-args": {
+      "patterns": [
+        {
+          "include": "#function-name"
+        },
+        {
+          "include": "#dot"
+        },
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#args"
+        }
+      ]
+    },
+    "function-name": {
+      "patterns": [
+        {
+          "name": "entity.name.function.racket",
+          "begin": "(?x) (?<=[(\\[{]) \\s* (\\|)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.verbatim.begin.racket"
+            }
+          },
+          "end": "\\|",
+          "endCaptures": {
+            "0": "punctuation.verbatim.end.racket"
+          },
+          "contentName": "entity.name.function.racket"
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s*\n  (\\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.function.racket"
+            }
+          },
+          "end": "(?=[()\\[\\]{}\",'`;\\s])",
+          "contentName": "entity.name.function.racket",
+          "patterns": [
+            {
+              "match": "\\\\ "
+            },
+            {
+              "begin": "\\|",
+              "beginCaptures": {
+                "0": "punctuation.verbatim.begin.racket"
+              },
+              "end": "\\|",
+              "endCaptures": {
+                "0": "punctuation.verbatim.end.racket"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "lambda": {
+      "patterns": [
+        {
+          "include": "#lambda-onearg"
+        },
+        {
+          "include": "#lambda-args"
+        }
+      ]
+    },
+    "lambda-onearg": [
+      {
+        "name": "meta.lambda.racket",
+        "match": "(?x) (?<=[(\\[{]) \\s* (lambda | λ) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)",
+        "captures": {
+          "1": {
+            "name": "storage.type.lambda.racket"
+          },
+          "2": {
+            "name": "variable.parameter.racket"
+          }
+        }
+      }
+    ],
+    "lambda-args": {
+      "patterns": [
+        {
+          "name": "meta.lambda.racket",
+          "begin": "(?x) (?<=[(\\[{]) \\s* (lambda | λ) \\s+ (\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.lambda.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#args"
+            }
+          ]
+        },
+        {
+          "name": "meta.lambda.racket",
+          "begin": "(?x) (?<=[(\\[{]) \\s* (lambda | λ) \\s+ (\\[)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.lambda.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#args"
+            }
+          ]
+        },
+        {
+          "name": "meta.lambda.racket",
+          "begin": "(?x) (?<=[(\\[{]) \\s* (lambda | λ) \\s+ ({)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.lambda.racket"
+            },
+            "2": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#args"
+            }
+          ]
+        }
+      ]
+    },
+    "args": {
+      "patterns": [
+        {
+          "include": "#keyword"
+        },
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#default-args"
+        },
+        {
+          "name": "variable.parameter.racket",
+          "match": "[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*"
+        }
+      ]
+    },
+    "default-args": {
+      "patterns": [
+        {
+          "begin": "\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#default-args-content"
+            }
+          ]
+        },
+        {
+          "begin": "\\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#default-args-content"
+            }
+          ]
+        },
+        {
+          "begin": "{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#default-args-content"
+            }
+          ]
+        }
+      ]
+    },
+    "default-args-content": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#argument"
+        },
+        {
+          "include": "$base"
+        }
+      ]
+    },
+    "argument": {
+      "patterns": [
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (\\|)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.verbatim.begin.racket"
+            }
+          },
+          "end": "\\|",
+          "endCaptures": {
+            "0": "punctuation.verbatim.end.racket"
+          },
+          "contentName": "variable.parameter.racket"
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s*\n  (\\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.parameter.racket"
+            }
+          },
+          "end": "(?=[()\\[\\]{}\",'`;\\s])",
+          "contentName": "variable.parameter.racket",
+          "patterns": [
+            {
+              "match": "\\\\ "
+            },
+            {
+              "begin": "\\|",
+              "beginCaptures": {
+                "0": "punctuation.verbatim.begin.racket"
+              },
+              "end": "\\|",
+              "endCaptures": {
+                "0": "punctuation.verbatim.end.racket"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "struct": {
+      "patterns": [
+        {
+          "name": "meta.struct.fields.racket",
+          "begin": "(?x) (?<=[(\\[{]) \\s* (struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) (?: \\s+ [^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)? \\s* (\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.struct.racket"
+            },
+            "2": {
+              "name": "entity.name.struct.racket"
+            },
+            "3": {
+              "name": "punctuation.section.fields.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.fields.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comment"
+            },
+            {
+              "include": "#default-args-struct"
+            },
+            {
+              "include": "#struct-field"
+            }
+          ]
+        },
+        {
+          "name": "meta.struct.fields.racket",
+          "begin": "(?x) (?<=[(\\[{]) \\s* (struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) (?: \\s+ [^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)? \\s* (\\[)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.struct.racket"
+            },
+            "2": {
+              "name": "entity.name.struct.racket"
+            },
+            "3": {
+              "name": "punctuation.section.fields.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.fields.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comment"
+            },
+            {
+              "include": "#default-args-struct"
+            },
+            {
+              "include": "#struct-field"
+            }
+          ]
+        },
+        {
+          "name": "meta.struct.fields.racket",
+          "begin": "(?x) (?<=[(\\[{]) \\s* (struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) (?: \\s+ [^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)? \\s* (\\{)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.struct.racket"
+            },
+            "2": {
+              "name": "entity.name.struct.racket"
+            },
+            "3": {
+              "name": "punctuation.section.fields.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.fields.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comment"
+            },
+            {
+              "include": "#default-args-struct"
+            },
+            {
+              "include": "#struct-field"
+            }
+          ]
+        }
+      ]
+    },
+    "prefab-struct": {
+      "patterns": [
+        {
+          "name": "meta.prefab-struct.racket",
+          "begin": "#s\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.prefab-struct.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.prefab-struct.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "$base"
+            }
+          ]
+        },
+        {
+          "name": "meta.prefab-struct.racket",
+          "begin": "#s\\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.prefab-struct.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.prefab-struct.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "$base"
+            }
+          ]
+        },
+        {
+          "name": "meta.prefab-struct.racket",
+          "begin": "#s{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.prefab-struct.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.prefab-struct.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "$base"
+            }
+          ]
+        }
+      ]
+    },
+    "default-args-struct-content": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#argument-struct"
+        },
+        {
+          "include": "$base"
+        }
+      ]
+    },
+    "default-args-struct": {
+      "patterns": [
+        {
+          "begin": "\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#default-args-struct-content"
+            }
+          ]
+        },
+        {
+          "begin": "\\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#default-args-struct-content"
+            }
+          ]
+        },
+        {
+          "begin": "{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#default-args-struct-content"
+            }
+          ]
+        }
+      ]
+    },
+    "argument-struct": {
+      "patterns": [
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (\\|)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.verbatim.begin.racket"
+            }
+          },
+          "end": "\\|",
+          "endCaptures": {
+            "0": "punctuation.verbatim.end.racket"
+          },
+          "contentName": "variable.other.member.racket"
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s*\n  (\\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.other.member.racket"
+            }
+          },
+          "end": "(?=[()\\[\\]{}\",'`;\\s])",
+          "contentName": "variable.other.member.racket",
+          "patterns": [
+            {
+              "match": "\\\\ "
+            },
+            {
+              "begin": "\\|",
+              "beginCaptures": {
+                "0": "punctuation.verbatim.begin.racket"
+              },
+              "end": "\\|",
+              "endCaptures": {
+                "0": "punctuation.verbatim.end.racket"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "dot": {
+      "patterns": [
+        {
+          "name": "punctuation.accessor.racket",
+          "match": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) \\. (?=$|[()\\[\\]{}\",'`;\\s])"
+        }
+      ]
+    },
+    "list": {
+      "patterns": [
+        {
+          "name": "meta.list.racket",
+          "begin": "\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.list.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.list.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#list-content"
+            }
+          ]
+        },
+        {
+          "name": "meta.list.racket",
+          "begin": "\\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.list.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.list.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#list-content"
+            }
+          ]
+        },
+        {
+          "name": "meta.list.racket",
+          "begin": "{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.list.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.list.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#list-content"
+            }
+          ]
+        }
+      ]
+    },
+    "list-content": {
+      "patterns": [
+        {
+          "include": "#builtin-functions"
+        },
+        {
+          "include": "#syntax"
+        },
+        {
+          "include": "#dot"
+        },
+        {
+          "include": "$base"
+        }
+      ]
+    },
+    "hash": {
+      "patterns": [
+        {
+          "name": "meta.hash.racket",
+          "begin": "(?x) \\# hash(?: eq(?: v)?)? \\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.hash.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.hash.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#hash-content"
+            }
+          ]
+        },
+        {
+          "name": "meta.hash.racket",
+          "begin": "(?x) \\# hash(?: eq(?: v)?)? \\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.hash.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.hash.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#hash-content"
+            }
+          ]
+        },
+        {
+          "name": "meta.hash.racket",
+          "begin": "(?x) \\# hash(?: eq(?: v)?)? {",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.hash.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.hash.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#hash-content"
+            }
+          ]
+        }
+      ]
+    },
+    "hash-content": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#pairing"
+        }
+      ]
+    },
+    "pairing": {
+      "patterns": [
+        {
+          "name": "meta.list.racket",
+          "begin": "\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.pair.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.pair.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#pair-content"
+            }
+          ]
+        },
+        {
+          "name": "meta.list.racket",
+          "begin": "\\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.pair.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.pair.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#pair-content"
+            }
+          ]
+        },
+        {
+          "name": "meta.list.racket",
+          "begin": "{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.pair.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.pair.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#pair-content"
+            }
+          ]
+        }
+      ]
+    },
+    "pair-content": {
+      "patterns": [
+        {
+          "include": "#dot"
+        },
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#atom"
+        }
+      ]
+    },
+    "vector": {
+      "patterns": [
+        {
+          "name": "meta.vector.racket",
+          "begin": "(?x) \\# (?: fl | Fl | fx | Fx)? [0-9]* \\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.vector.begin.racket"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.vector.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "$base"
+            }
+          ]
+        },
+        {
+          "name": "meta.vector.racket",
+          "begin": "(?x) \\# (?: fl | Fl | fx | Fx)? [0-9]* \\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.vector.begin.racket"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.vector.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "$base"
+            }
+          ]
+        },
+        {
+          "name": "meta.vector.racket",
+          "begin": "(?x) \\# (?: fl | Fl | fx | Fx)? [0-9]* {",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.vector.begin.racket"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.vector.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "$base"
+            }
+          ]
+        }
+      ]
+    },
+    "binding": {
+      "patterns": [
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s* (\\|)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.verbatim.begin.racket"
+            }
+          },
+          "end": "\\|",
+          "endCaptures": {
+            "0": "punctuation.verbatim.end.racket"
+          },
+          "contentName": "entity.name.constant"
+        },
+        {
+          "begin": "(?x) (?<=[(\\[{]) \\s*\n  (\\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])\n",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.constant"
+            }
+          },
+          "end": "(?=[()\\[\\]{}\",'`;\\s])",
+          "contentName": "entity.name.constant",
+          "patterns": [
+            {
+              "match": "\\\\ "
+            },
+            {
+              "begin": "\\|",
+              "beginCaptures": {
+                "0": "punctuation.verbatim.begin.racket"
+              },
+              "end": "\\|",
+              "endCaptures": {
+                "0": "punctuation.verbatim.end.racket"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "number": {
+      "patterns": [
+        {
+          "include": "#number-dec"
+        },
+        {
+          "include": "#number-oct"
+        },
+        {
+          "include": "#number-bin"
+        },
+        {
+          "include": "#number-hex"
+        }
+      ]
+    },
+    "number-dec": {
+      "patterns": [
+        {
+          "name": "constant.numeric.racket",
+          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: (?: \\#[dD])?(?: \\#[eEiI])? | (?: \\#[eEiI])?(?: \\#[dD])?)\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n            (?: [+-]? \\d+ \\. \\d+ \\#*) |\n            (?: [+-]? \\d+ \\#* \\. \\#*) |\n            (?: [+-]? \\d+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? \\d+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n            (?: [+-]? \\d+ \\. \\d+ \\#*) |\n            (?: [+-]? \\d+ \\#* \\. \\#*) |\n            (?: [+-]? \\d+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? \\d+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n            (?: [+-]? \\d+ \\. \\d+ \\#*) |\n            (?: [+-]? \\d+ \\#* \\. \\#*) |\n            (?: [+-]? \\d+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? \\d+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n            (?: [+-]? \\d+ \\. \\d+ \\#*) |\n            (?: [+-]? \\d+ \\#* \\. \\#*) |\n            (?: [+-]? \\d+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? \\d+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n      (?: [+-]? \\d* \\. \\d+ \\#*) |\n      (?: [+-]? \\d+ \\#* \\. \\#*) |\n      (?: [+-]? \\d+ \\#*)\n    ) (?: [sldefSLDEF] [+-]? \\d+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
+        }
+      ]
+    },
+    "number-oct": {
+      "patterns": [
+        {
+          "name": "constant.numeric.octal.racket",
+          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: \\#[oO](?: \\#[eEiI])? | (?: \\#[eEiI])?\\#[oO])\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n      (?: [+-]? [0-7]* \\. [0-7]+ \\#*) |\n      (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n      (?: [+-]? [0-7]+ \\#*)\n    ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
+        }
+      ]
+    },
+    "number-bin": {
+      "patterns": [
+        {
+          "name": "constant.numeric.bin.racket",
+          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: \\#[bB](?: \\#[eEiI])? | (?: \\#[eEiI])?\\#[bB])\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n         (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n      (?: [+-]? [01]* \\. [01]+ \\#*) |\n      (?: [+-]? [01]+ \\#* \\. \\#*) |\n      (?: [+-]? [01]+ \\#*)\n    ) (?: [sldefSLDEF] [+-]? [01]+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
+        }
+      ]
+    },
+    "number-hex": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.racket",
+          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: \\#[xX](?: \\#[eEiI])? | (?: \\#[eEiI])?\\#[xX])\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n            (?: [+-]? [0-9a-fA-F] \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n            (?: [+-]? [0-9a-fA-F]+ \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n            (?: [+-]? [0-9a-fA-F]+ \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n            (?: [+-]? [0-9a-fA-F]+ \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n      (?: [+-]? [0-9a-fA-F]* \\. [0-9a-fA-F]+ \\#*) |\n      (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n      (?: [+-]? [0-9a-fA-F]+ \\#*)\n    ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
+        }
+      ]
+    },
+    "comment": {
+      "patterns": [
+        {
+          "include": "#comment-line"
+        },
+        {
+          "include": "#comment-block"
+        },
+        {
+          "include": "#comment-sexp"
+        }
+      ]
+    },
+    "comment-sexp": {
+      "patterns": [
+        {
+          "name": "comment.sexp.racket",
+          "match": "(?<=^|[()\\[\\]{}\",'`;\\s])#;"
+        }
+      ]
+    },
+    "comment-line": {
+      "patterns": [
+        {
+          "name": "comment.line.unix.racket",
+          "match": "(#!)[ /].*$",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.comment.racket"
+            }
+          }
+        },
+        {
+          "name": "comment.line.semicolon.racket",
+          "match": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) (;) .* $",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.comment.racket"
+            }
+          }
+        }
+      ]
+    },
+    "comment-block": {
+      "patterns": [
+        {
+          "name": "comment.block.racket",
+          "begin": "#\\|",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.begin.racket"
+            }
+          },
+          "end": "\\|#",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.end.racket"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comment-block"
+            }
+          ]
+        }
+      ]
+    },
+    "variable": {
+      "patterns": [
+        {
+          "begin": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) (\\|)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.verbatim.begin.racket"
+            }
+          },
+          "end": "\\|",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.verbatim.end.racket"
+            }
+          }
+        },
+        {
+          "begin": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s])\n(?: \\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])\n",
+          "end": "(?=[()\\[\\]{}\",'`;\\s])",
+          "patterns": [
+            {
+              "match": "\\\\ "
+            },
+            {
+              "begin": "\\|",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.verbatim.begin.racket"
+                }
+              },
+              "end": "\\|",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.verbatim.end.racket"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "struct-field": {
+      "patterns": [
+        {
+          "contentName": "variable.other.member.racket",
+          "begin": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) (\\|)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.verbatim.begin.racket"
+            }
+          },
+          "end": "\\|",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.verbatim.end.racket"
+            }
+          }
+        },
+        {
+          "contentName": "variable.other.member.racket",
+          "begin": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s])\n(\\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])\n",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.other.member.racket"
+            }
+          },
+          "end": "(?=[()\\[\\]{}\",'`;\\s])",
+          "patterns": [
+            {
+              "match": "\\\\ "
+            },
+            {
+              "begin": "\\|",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.verbatim.begin.racket"
+                }
+              },
+              "end": "\\|",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.verbatim.end.racket"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "keyword": {
+      "patterns": [
+        {
+          "name": "keyword.other.racket",
+          "match": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) \\#: [^()\\[\\]{}\",'`;\\s]+"
+        }
+      ]
+    },
+    "bool": {
+      "patterns": [
+        {
+          "name": "constant.language.racket",
+          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s]) \\#\n  (?: [tT](?: rue)?|[fF](?: alse)?)\n  (?=[()\\[\\]{}\",'`;\\s])"
+        }
+      ]
+    },
+    "signature": {
+      "patterns": [
+        {
+          "name": "entity.name.type.racket",
+          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: Any | Boolean | Boolean | Char | EmptyList | False | Integer | Natural | Number | Rational | Real | String | Symbol | True)\n  (?=[()\\[\\]{}\",'`;\\s])"
+        }
+      ]
+    },
+    "character": {
+      "patterns": [
+        {
+          "name": "constant.character.racket",
+          "match": "(?x) \\#\\\\\n  (?:\n    (?: [0-7]{3}) |\n    (?: u[0-9a-fA-F]{1,4}) |\n    (?: U[0-9a-fA-F]{1,6}) |\n    (?:\n      (?:\n        null? | newline | linefeed | backspace | vtab | page |\n        return | space | rubout | (?: [^\\w\\s] | \\d)\n      )\n      (?![a-zA-Z])\n    ) |\n    (?: [^\\W\\d](?=[\\W\\d]) | \\W )\n  )"
+        }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "include": "#byte-string"
+        },
+        {
+          "include": "#regexp-byte-string"
+        },
+        {
+          "include": "#regexp-string"
+        },
+        {
+          "include": "#base-string"
+        },
+        {
+          "include": "#here-string"
+        }
+      ]
+    },
+    "here-string": {
+      "patterns": [
+        {
+          "name": "string.here.racket",
+          "begin": "#<<(.*)$",
+          "end": "^\\1$"
+        }
+      ]
+    },
+    "base-string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.racket",
+          "begin": "\"",
+          "beginCaptures": {
+            "0": [
+              {
+                "name": "punctuation.definition.string.begin.racket"
+              }
+            ]
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": [
+              {
+                "name": "punctuation.definition.string.end.racket"
+              }
+            ]
+          },
+          "patterns": [
+            {
+              "include": "#escape-char"
+            }
+          ]
+        }
+      ]
+    },
+    "byte-string": {
+      "patterns": [
+        {
+          "name": "string.byte.racket",
+          "begin": "#\"",
+          "beginCaptures": {
+            "0": [
+              {
+                "name": "punctuation.definition.string.begin.racket"
+              }
+            ]
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": [
+              {
+                "name": "punctuation.definition.string.end.racket"
+              }
+            ]
+          },
+          "patterns": [
+            {
+              "include": "#escape-char-base"
+            }
+          ]
+        }
+      ]
+    },
+    "regexp-string": {
+      "patterns": [
+        {
+          "name": "string.regexp.racket",
+          "begin": "#(r|p)x\"",
+          "beginCaptures": {
+            "0": [
+              {
+                "name": "punctuation.definition.string.begin.racket"
+              }
+            ]
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": [
+              {
+                "name": "punctuation.definition.string.end.racket"
+              }
+            ]
+          },
+          "patterns": [
+            {
+              "include": "#escape-char-base"
+            }
+          ]
+        }
+      ]
+    },
+    "regexp-byte-string": {
+      "patterns": [
+        {
+          "name": "string.regexp.byte.racket",
+          "begin": "#(r|p)x#\"",
+          "beginCaptures": {
+            "0": [
+              {
+                "name": "punctuation.definition.string.begin.racket"
+              }
+            ]
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": [
+              {
+                "name": "punctuation.definition.string.end.racket"
+              }
+            ]
+          },
+          "patterns": [
+            {
+              "include": "#escape-char-base"
+            }
+          ]
+        }
+      ]
+    },
+    "format-string": {
+      "patterns": [
+        {
+          "name": "constant.other.placeholder.racket",
+          "match": "(?x) ~ (?:\n  (?: \\.?[n%aAsSvV]) |\n  [cCbBoOxX~\\s]\n)"
+        }
+      ]
+    },
+    "escape-char": {
+      "patterns": [
+        {
+          "include": "#escape-char-base"
+        },
+        {
+          "name": "constant.character.escape.racket",
+          "match": "(?x) \\\\\n  (?:\n   (?: u[\\da-fA-F]{1,4}) |\n   (?: U[\\da-fA-F]{1,8})\n  )"
+        },
+        {
+          "include": "#escape-char-error"
+        }
+      ]
+    },
+    "escape-char-base": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.racket",
+          "match": "(?x) \\\\\n  (?:\n   (?: [abtnvfre\"'\\\\]) |\n   (?: [0-7]{1,3}) |\n   (?: x[\\da-fA-F]{1,2})\n )"
+        }
+      ]
+    },
+    "escape-char-error": {
+      "patterns": [
+        {
+          "name": "invalid.illegal.escape.racket",
+          "match": "\\\\."
+        }
+      ]
+    }
+  }
+}
