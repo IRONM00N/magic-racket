@@ -1,11 +1,21 @@
 ---
 # todo:
-# - 2htdp/abstraction: 
+# - 2htdp/abstraction:
 #   - functions: define-type, type-case
-#   - for...: variable declarations  
+#   - for...: variable declarations
+
+# ^(\s+)'(\d)': \{ name: ([^\s]+) \}
+
+# $1'$2':
+# $1  name: $3
+
+# ('\d'):\n[\s-]*name:\s*([^\s]*)
+
+# $1: { name: $2 }
 
 name: Racket Student Language
-scopeName: source.racket-sl
+# scopeName: source.racket-sl
+scopeName: source.racket
 firstLineMatch: '#lang htdp/[bia]sl\+?'
 
 filetypes:
@@ -14,15 +24,42 @@ filetypes:
 patterns:
   - include: '#expression'
   - name: keyword.other.racket
-    match: "^#lang"
+    match: '^#lang'
+
+# the anchors key is removed before writing to the JSON file
+anchors:
+  - &extended (?x)
+  - &valid_name_first_char >-
+    [^(\#)\[\]{}",'`;\s]
+  - &valid_name_other_chars >-
+    [^()\[\]{}",'`;\s]
+  - !concat &valid_name [*valid_name_first_char, *valid_name_other_chars, '*']
+  - &end_boundary_lb (?<=$|[()\[\]{}\",'`;\s])
+  - &end_boundary_la (?=$|[()\[\]{}\",'`;\s])
+  - &begin_boundary_lb (?<=^|[()\[\]{}",'`;\s])
+  - &digit_2 '[01]+'
+  - &digit_8 '[0-7]+'
+  - &digit_10 '\d+'
+  - &digit_10* '\d*'
+  - &digit_16 '[0-9a-fA-F]+'
+  - &sign '[+-]?'
+  - &req_sign '[+-]'
+  - &hash '\#*'
+  - &backslash '\/'
+  - &dot '\.'
+  - &exp_mark '[sldefSLDEF]'
+  - &exp_mark_16 '[slSL]'
+  - &inexact_special '(?: (?: [iI][nN][fF])\.[0f] | (?: [nN][aA][nN])\.[0f])'
+  - &num_end >-
+    (?=$|[()\[\]{}",'`;\s])
 
 repository:
-  expression: 
+  expression:
     patterns:
-       - include: '#comment'
-       - include: '#not-atom'
-       - include: '#atom'
-       - include: '#quote'
+      - include: '#comment'
+      - include: '#not-atom'
+      - include: '#atom'
+      - include: '#quote'
 
   atom:
     patterns:
@@ -32,8 +69,8 @@ repository:
       - include: '#keyword'
       - include: '#character'
       - include: '#symbol'
-      - include: '#variable'
       - include: '#signature'
+      # - include: '#variable'
 
   not-atom:
     patterns:
@@ -65,12 +102,10 @@ repository:
         begin: >-
           (?x) (?<=^|[()\[\]{}",;\s]) (?: ` | ' )+(\|)
         beginCaptures:
-          '1':
-            name: punctuation.verbatim.begin.racket
+          '1': { name: punctuation.verbatim.begin.racket }
         end: '\|'
         endCaptures:
-          '0':
-            name: punctuation.verbatim.end.racket
+          '0': { name: punctuation.verbatim.end.racket }
       - name: string.quoted.single.racket
         begin: >-
           (?x) (?<=^|[()\[\]{}",;\s]) (?: ` | ' )+
@@ -80,28 +115,23 @@ repository:
           - match: '\\ '
           - begin: '\|'
             beginCaptures:
-              '0':
-                name: punctuation.verbatim.begin.racket
+              '0': { name: punctuation.verbatim.begin.racket }
             end: '\|'
             endCaptures:
-              '0':
-                name: punctuation.verbatim.end.racket
+              '0': { name: punctuation.verbatim.end.racket }
 
   format:
     patterns:
-      - begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (e?printf | format) \s*
-          (")
+      - begin: !concat
+          - &open_backet (?x) (?<=[(\[{]) \s*
+          - (e?printf | format) \s*
+          - (")
         beginCaptures:
-          '1':
-            name: support.function.racket
-          '2':
-            name: string.quoted.double.racket
+          '1': { name: support.function.racket }
+          '2': { name: string.quoted.double.racket }
         end: '"'
         endCaptures:
-          '0':
-            name: string.quoted.double.racket
+          '0': { name: string.quoted.double.racket }
         contentName: string.quoted.double.racket
         patterns:
           - include: '#format-string'
@@ -111,8 +141,10 @@ repository:
     patterns:
       - include: '#format'
       - include: '#struct'
-      - match: >-
-          (?x) (?<=$|[()\[\]{}\",'`;\s]) (
+      - match: !concat
+          - !concat [*extended, *end_boundary_lb]
+          - (
+          - >-
             : | signature | mixed | - | < | <= | > | >= | abs | acos | add1 | angle | asin | atan | ceiling | complex\? | conjugate | cos | cosh | 
             current-seconds | denominator | even\? | exact->inexact | exact\? | exp | expt | floor | gcd | imag-part | inexact->exact | inexact\? | 
             integer->char | integer-sqrt | integer\? | lcm | log | magnitude | make-polar | make-rectangular | max | min | modulo | negative\? | 
@@ -136,100 +168,98 @@ repository:
             hash-eqv\? | hash-for-each | hash-has-key\? | hash-map | hash-ref | hash-ref! | hash-remove | hash-remove! | hash-set | hash-set! | 
             hash-update | hash-update! | hash\? | make-hash | make-hasheq | make-hasheqv | make-immutable-hash | make-immutable-hasheq | 
             make-immutable-hasheqv | and | or
-          ) (?=$|[()\[\]{}\",'`;\s])
-        captures: 
-          '1': 
-            name: support.function.racket
-      - match: >- 
-          (?x) (?<=$|[()\[\]{}\",'`;\s]) (
-            in-range | in-naturals
-          ) (?=$|[()\[\]{}\",'`;\s])   
+          - )
+          - *end_boundary_la
+        captures: &support_function
+          '1': { name: support.function.racket }
+      - match: !concat [*extended, *end_boundary_lb, (in-range | in-naturals), *end_boundary_la]
+        captures: *support_function
+      - match: !concat
+          - !concat [*extended, *end_boundary_lb]
+          - (check-expect | check-random | check-within | check-error | check-member-of | check-satisfied | check-range | check-range)
+          - *end_boundary_la
         captures:
-          '1':
-            name: 
-      - match: >-
-          (?x) (?<=$|[()\[\]{}\",'`;\s]) (
-            check-expect | check-random | check-within | check-error | check-member-of | check-satisfied | check-range | check-range
-          ) (?=$|[()\[\]{}\",'`;\s])
-        captures:
-          '1':
-            name: support.function.racket
+          *support_function
+          # builtin-variables:
+          #   patterns:
+          #     - match: (?x) (?<=$|[()\[\]{}\",'`;\s]) () (?<=$|[()\[\]{}\",'`;\s])
 
-  builtin-variables:
-    patterns:
-      - match: (?x) (?<=$|[()\[\]{}\",'`;\s]) () (?<=$|[()\[\]{}\",'`;\s])
-
-  syntax: 
+  syntax:
     patterns:
       - include: '#define'
       - include: '#let'
       - include: '#lambda'
       - include: '#set-var'
       - include: '#control'
-      - match: >-
-          (?x) (?<=[(\[{]) \s*
-          (local) \s+
-          (?=$|[()\[\]{}\",'`;\s])
+      - match: !concat [*open_backet, (local) \s+, *end_boundary_la]
         captures:
-          '1': # fix: better name?
-            name: keyword.local.racket
-      - match: >-
-          (?x) (?<=[(\[{]) \s*
-          (begin|begin0) \s+
-          (?=$|[()\[\]{}\",'`;\s])
+          # fix: better name?
+          '1': { name: keyword.local.racket }
+      - match: !concat [*open_backet, (begin|begin0) \s+, *end_boundary_la]
         captures:
-          '1': # fix: should this be control?
-            name: keyword.begin.racket
-      - match: >-
-          (?x) (?<=[(\[{]) \s*
-          (time) \s+
-          (?=$|[()\[\]{}\",'`;\s])
+          # fix: should this be control?
+          '1': { name: keyword.begin.racket }
+      - match: !concat [*open_backet, (time) \s+, *end_boundary_la]
         captures:
-          '1': # maybe this should be a function?
-            name: keyword.time.racket
+          '1': { name: keyword.time.racket }
+      - match: !concat [*open_backet, (class) \s+, *end_boundary_la]
+        captures:
+          '1': { name: keyword.this.racket }
+      - match: !concat [*open_backet, (this|this%) \s+, *end_boundary_la]
+        captures:
+          '1': { name: keyword.this.racket }
+      - match: !concat [*open_backet, (send) \s+, *end_boundary_la]
+        captures:
+          '1': { name: keyword.send.racket }
+
       # todo: implement types properly
       - match: >-
           (?x) (?<=$|[()\[\]{}\",'`;\s]) (
             ListOf | ConsOf
           ) (?=$|[()\[\]{}\",'`;\s])
         captures:
-          '1':
-            name: support.function.a.racket
+          '1': { name: support.function.a.racket }
 
   control:
     patterns:
-      - match: >-
-          (?x) (?<=$|[()\[\]{}\",'`;\s]) (
-            \#%require | require | local-require
-          ) (?=$|[()\[\]{}\",'`;\s])
-        captures: 
-          '1': 
-            name: keyword.control.require.racket
-      - match: >-
-          (?x) (?<=$|[()\[\]{}\",'`;\s]) (
-            \#%provide | provide
-          ) (?=$|[()\[\]{}\",'`;\s])
+      - match: !concat
+          - !concat [*extended, *end_boundary_lb]
+          - (\#%require | require | local-require)
+          - *end_boundary_la
         captures:
-          '1':
-            name: keyword.control.provide.racket
-      - match: >-
-          (?x) (?<=$|[()\[\]{}\",'`;\s]) (
-            cond | else | match | if | when | unless | case | choice 
-          ) (?=$|[()\[\]{}\",'`;\s])
+          '1': { name: keyword.control.require.racket }
+      - match: !concat
+          - !concat [*extended, *end_boundary_lb]
+          - (\#%provide | provide)
+          - *end_boundary_la
         captures:
-          '1':
-            name: keyword.control.conditional.racket
+          '1': { name: keyword.control.provide.racket }
+      - match: !concat
+          - !concat [*extended, *end_boundary_lb]
+          - (cond | else | match | if | when | unless | case | choice)
+          - *end_boundary_la
+        captures:
+          '1': { name: keyword.control.conditional.racket }
       # 2htdp/abstraction
       # fix: variable declaration
-      - match: >- 
-          (?x) (?<=$|[()\[\]{}\",'`;\s]) (
-            for/list | for\*/list | for/or | for\*/or | for/and | for\*/and |
-            for/sum | for*/sum | for/product | for*/product | for/string | 
-            for*/string   
-          ) (?=$|[()\[\]{}\",'`;\s])
+      - match: !concat
+          - !concat [*extended, *end_boundary_lb]
+          - >-
+            (for\*?/list | for\*?/or | for\*?/and | for\*?/sum | 
+            for\*?/product | for\*?/string)
+          - *end_boundary_la
         captures:
-          '1':
-            name: keyword.control.flow.racket
+          '1': { name: keyword.control.flow.racket }
+          # racket
+      - match: !concat
+          - !concat [*extended, *end_boundary_lb]
+          - >-
+            (for\*? | for\*?/vector | for\*?/hash | for\*?/hasheq | 
+            for\*?/hasheqv | for\*?/hashalw | for\*?/lists | for\*?/first | 
+            for\*?/last | for\*?/foldr? | for\*?/foldr/derived | do)
+          - *end_boundary_la
+        captures:
+          '1': { name: keyword.control.flow.racket }
 
   define:
     patterns:
@@ -241,37 +271,26 @@ repository:
   define-struct:
     patterns:
       - &define-struct
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (define-struct) \s+
-          ([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*) \s*
-          (\()
+        begin: !concat
+          - !concat &define-struct_prefix
+            - !concat [*extended, '(?<=[(\[{]) \s*']
+            - (define-struct) \s+
+            - !concat [(, *valid_name, ) \s*]
+          - (\()
         beginCaptures:
-          '1':
-            name: storage.type.racket
-          '2':
-            name: entity.name.type.struct.racket
-          '3':
-            name: punctuation.section.begin.racket
+          '1': { name: storage.type.racket }
+          '2': { name: entity.name.type.struct.racket }
+          '3': { name: punctuation.section.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.end.racket
+          '0': { name: punctuation.section.end.racket }
         patterns:
           - include: '#define-struct-fields'
-      - <<: *define-struct 
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (define-struct) \s+
-          ([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*) \s*
-          (\[)
+      - <<: *define-struct
+        begin: !concat [*define-struct_prefix, '(\[)']
         end: '\]'
-      - <<: *define-struct 
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (define-struct) \s+
-          ([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*) \s*
-          (\{)
+      - <<: *define-struct
+        begin: !concat [*define-struct_prefix, '(\{)']
         end: '}'
 
   define-struct-fields:
@@ -279,94 +298,79 @@ repository:
       - include: '#keyword'
       - include: '#comment'
       - name: variable.other.member.racket
-        match: "[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*"
+        match: *valid_name
 
   define-val:
     patterns:
-      - match: >-
-          (?x) (?<=[(\[{]) \s*
-          (define(?: (?: -for)?-syntax)?) \s+
-          ([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)
+      - match: !concat # todo: add more anchors
+          - !concat &DEF_VAL_START [*extended, '(?<=[(\[{]) \s*']
+          - &def '((?:define(?: (?: -for)?-syntax)?) | define\/(?:public|private|override|public-final))'
+          - \s+
+          - !concat [(, *valid_name, )]
         captures:
-          '1': # why is this make-struct???
-            name: storage.type.make-struct.racket
-          '2':
-            name: entity.name.variable.racket
+          '1': { name: storage.type.define.racket }
+          '2': { name: entity.name.variable.racket }
 
   define-vals:
     patterns:
       - &define-vals
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (define-(?: values(?: -for-syntax)? | syntaxes)?) \s*
-          (\()
+        begin: !concat
+          - !concat &define_vals_prefix
+            - *DEF_VAL_START
+            - '(define-(?: values(?: -for-syntax)? | syntaxes)?) \s*'
+          - (\()
         beginCaptures:
-          '1':
-            name: storage.type.racket
-          '2':
-            name: punctuation.section.begin.racket
+          '1': { name: storage.type.define-many.racket }
+          '2': { name: punctuation.section.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.end.racket
+          '0': { name: punctuation.section.end.racket }
         patterns:
           - name: entity.name.variable.racket
-            match: "[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*"
+            match: *valid_name
       - <<: *define-vals
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (define-(?: values(?: -for-syntax)? | syntaxes)?) \s*
-          (\[)
+        begin: !concat [*define_vals_prefix, '(\[)']
         end: '\]'
       - <<: *define-vals
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (define-(?: values(?: -for-syntax)? | syntaxes)?) \s*
-          ({)
+        begin: !concat [*define_vals_prefix, '({)']
         end: '}'
 
-  # this matching for let is very far from perfect, but there is no good way to 
+  # this matching for let is very far from perfect, but there is no good way to
   # determine if parenthesis match one another. This will work best if different
   # types of parenthesis are used
   # fix: first line
-  let: 
-    patterns: 
-      - &let 
+  let:
+    patterns:
+      - &let
         begin: >-
           (?x) (?<=[(\[{]) \s*
-          (let | let\* | letrec | shared) \s+
+          (let (\s+loop)? | let\* | letrec | shared) \s+
           (\()
         beginCaptures:
-          '1':
-            name: storage.type.let.racket
-          '2':
-            name: punctuation.section.begin.racket
+          '1': { name: storage.type.let.racket }
+          '2': { name: keyword.control.flow.racket }
+          '3': { name: punctuation.section.begin.LET.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.end.racket
+          '0': { name: punctuation.section.end.racket }
         patterns:
           - &let_expr
-            begin: >-
-              ^\s*(\()\s*([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)\b
+            begin: !concat # there has got to be a better way to do this
+              - !concat &let_expr_prefix ['(?:^\s*)?']
+              - !concat ['(\()\s*(', *valid_name, )\b]
             beginCaptures:
-              '1': 
-                name: punctuation.section.begin.racket
-              '2':
-                name: entity.name.variable.racket
+              '1': { name: punctuation.section.begin.let.racket }
+              '2': { name: entity.name.variable.let.racket }
             end: '\)'
             endCaptures:
-               '0': 
-                name: punctuation.section.begin.racket
+              '0': { name: punctuation.section.end.let.racket }
             patterns:
               - include: '#expression'
           - <<: *let_expr
-            begin: >-
-              ^\s*(\[)\s*([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)\b
+            begin: !concat [*let_expr_prefix, '(\[)\s*(', *valid_name, )\b]
             end: '\]'
           - <<: *let_expr
-            begin: >-
-              ^\s*({)\s*([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)\b
+            begin: !concat [*let_expr_prefix, '({)\s*(', *valid_name, )\b]
             end: '}'
       - <<: *let
         begin: >-
@@ -381,49 +385,40 @@ repository:
           ({)
         end: '}'
 
-  set-var: 
+  set-var:
     patterns:
-      - match: >-
-          (?x) (?<=[(\[{]) \s*
-          (set!) \s+
-          ([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)
+      - match: !concat
+          - !concat [*extended, '(?<=[(\[{]) \s*']
+          - (set!) \s+
+          - !concat ['(', *valid_name, ')']
         captures:
-          '1':
-            name: keyword.set.racket
-          '2':
-            name: entity.name.variable.racket
+          '1': { name: keyword.set.racket }
+          '2': { name: entity.name.variable.racket }
 
   define-func:
     patterns:
       - &define-func
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (define (?: (?: -for)?-syntax)?) \s*
-          (\()
+        begin: !concat
+          - !concat &define_func_prefix
+            - !concat [*extended, '(?<=[(\[{]) \s*']
+            - !concat [*def, '\s*']
+            # - '(define (?: (?: -for)?-syntax)?) \s*'
+          - (\()
         beginCaptures:
-          '1':
-            name: storage.type.lambda.racket
-          '2':
-            name: punctuation.section.begin.racket
+          '1': { name: storage.type.lambda.racket }
+          '2': { name: punctuation.section.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.end.racket
+          '0': { name: punctuation.section.end.racket }
         patterns:
           - include: '#func-args'
       - <<: *define-func
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (define (?: (?: -for)?-syntax)?) \s*
-          (\[)
+        begin: !concat [*define_func_prefix, '(\[)']
         end: '\]'
       - <<: *define-func
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (define (?: (?: -for)?-syntax)?) \s*
-          ({)
+        begin: !concat [*define_func_prefix, '({)']
         end: '}'
-          
+
   func-args:
     patterns:
       - include: '#function-name'
@@ -436,28 +431,26 @@ repository:
       - name: entity.name.function.racket
         begin: (?x) (?<=[(\[{]) \s* (\|)
         beginCaptures:
-          '1':
-            name: punctuation.verbatim.begin.racket
+          '1': { name: punctuation.verbatim.begin.racket }
         end: '\|'
         endCaptures:
-          '0': punctuation.verbatim.end.racket
+          '0': { name: punctuation.verbatim.end.racket }
         contentName: entity.name.function.racket
       - begin: >-
           (?x) (?<=[(\[{]) \s*
             (\#% | \\\  | [^\#()\[\]{}",'`;\s])
         beginCaptures:
-          '1':
-            name: entity.name.function.racket
+          '1': { name: entity.name.function.racket }
         end: "(?=[()\\[\\]{}\",'`;\\s])"
         contentName: entity.name.function.racket
         patterns:
           - match: '\\ '
           - begin: '\|'
             beginCaptures:
-              '0': punctuation.verbatim.begin.racket
+              '0': { name: punctuation.verbatim.begin.racket }
             end: '\|'
             endCaptures:
-              '0': punctuation.verbatim.end.racket
+              '0': { name: punctuation.verbatim.end.racket }
 
   lambda:
     patterns:
@@ -465,16 +458,14 @@ repository:
       - include: '#lambda-args'
 
   lambda-onearg:
-    - name: meta.lambda.racket
+    - name: meta.lambda.onearg.racket
       match: >-
         (?x) (?<=[(\[{]) \s*
         (lambda | λ) \s+
         ([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)
       captures:
-        '1':
-          name: storage.type.lambda.racket
-        '2':
-          name: variable.parameter.racket
+        '1': { name: storage.type.lambda.racket }
+        '2': { name: variable.parameter.racket }
 
   lambda-args:
     patterns:
@@ -485,23 +476,20 @@ repository:
           (lambda | λ) \s+
           (\()
         beginCaptures:
-          '1':
-            name: storage.type.lambda.racket
-          '2':
-            name: punctuation.section.begin.racket
+          '1': { name: storage.type.lambda.racket }
+          '2': { name: punctuation.section.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.end.racket
+          '0': { name: punctuation.section.end.racket }
         patterns:
           - include: '#args'
-      - <<: *lambda-args 
+      - <<: *lambda-args
         begin: >-
           (?x) (?<=[(\[{]) \s*
           (lambda | λ) \s+
           (\[)
         end: '\]'
-      - <<: *lambda-args 
+      - <<: *lambda-args
         begin: >-
           (?x) (?<=[(\[{]) \s*
           (lambda | λ) \s+
@@ -514,28 +502,26 @@ repository:
       - include: '#comment'
       - include: '#default-args'
       - name: variable.parameter.racket
-        match: "[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*"
+        match: *valid_name
 
   default-args:
     patterns:
       - &default-args
         begin: '\('
         beginCaptures:
-          '0':
-            name: punctuation.section.begin.racket
+          '0': { name: punctuation.section.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.end.racket
+          '0': { name: punctuation.section.end.racket }
         patterns:
           - include: '#default-args-content'
-      - <<: *default-args 
+      - <<: *default-args
         begin: '\['
         end: '\]'
-      - <<: *default-args 
+      - <<: *default-args
         begin: '{'
         end: '}'
-   
+
   default-args-content:
     patterns:
       - include: '#comment'
@@ -546,69 +532,54 @@ repository:
     patterns:
       - begin: (?x) (?<=[(\[{]) \s* (\|)
         beginCaptures:
-          '1':
-            name: punctuation.verbatim.begin.racket
+          '1': { name: punctuation.verbatim.begin.racket }
         end: '\|'
         endCaptures:
-          '0': punctuation.verbatim.end.racket
+          '0': { name: punctuation.verbatim.end.racket }
         contentName: variable.parameter.racket
       - begin: >-
           (?x) (?<=[(\[{]) \s*
             (\#% | \\\  | [^\#()\[\]{}",'`;\s])
         beginCaptures:
-          '1':
-            name: variable.parameter.racket
+          '1': { name: variable.parameter.racket }
         end: "(?=[()\\[\\]{}\",'`;\\s])"
         contentName: variable.parameter.racket
         patterns:
           - match: '\\ '
           - begin: '\|'
             beginCaptures:
-              '0': punctuation.verbatim.begin.racket
+              '0': { name: punctuation.verbatim.begin.racket }
             end: '\|'
             endCaptures:
-              '0': punctuation.verbatim.end.racket
+              '0': { name: punctuation.verbatim.end.racket }
 
   struct:
     patterns:
       - &struct
         name: meta.struct.fields.racket
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (struct) \s+
-          ([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)
-          (?: \s+ [^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)? \s*
-          (\()
+        begin: !concat
+          - !concat &struct_prefix
+            - !concat [*extended, '(?<=[(\[{]) \s*']
+            - '(struct) \s+'
+            - !concat ['(', *valid_name, ')']
+            - !concat ['(?: \s+', *valid_name, ')? \s*']
+          - '(\()'
         beginCaptures:
-          '1':
-            name: storage.struct.racket
-          '2':
-            name: entity.name.struct.racket
-          '3':
-            name: punctuation.section.fields.begin.racket
+          '1': { name: storage.struct.racket }
+          '2': { name: entity.name.type.struct.racket }
+          '3': { name: punctuation.section.fields.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.fields.end.racket
+          '0': { name: punctuation.section.fields.end.racket }
         patterns:
           - include: '#comment'
           - include: '#default-args-struct'
           - include: '#struct-field'
-      - <<: *struct 
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (struct) \s+
-          ([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)
-          (?: \s+ [^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)? \s*
-          (\[)
+      - <<: *struct
+        begin: !concat [*struct_prefix, '(\[)']
         end: '\]'
-      - <<: *struct 
-        begin: >-
-          (?x) (?<=[(\[{]) \s*
-          (struct) \s+
-          ([^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)
-          (?: \s+ [^(\#)\[\]{}",'`;\s][^()\[\]{}",'`;\s]*)? \s*
-          (\{)
+      - <<: *struct
+        begin: !concat [*struct_prefix, '(\{)']
         end: '}'
 
   prefab-struct:
@@ -617,12 +588,10 @@ repository:
         name: meta.prefab-struct.racket
         begin: '#s\('
         beginCaptures:
-          '0':
-            name: punctuation.section.prefab-struct.begin.racket
+          '0': { name: punctuation.section.prefab-struct.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.prefab-struct.end.racket
+          '0': { name: punctuation.section.prefab-struct.end.racket }
         patterns:
           - include: '$base'
       - <<: *prefab-struct
@@ -640,21 +609,19 @@ repository:
 
   default-args-struct:
     patterns:
-      - &default_args 
+      - &default_args
         begin: '\('
         beginCaptures:
-          '0':
-            name: punctuation.section.begin.racket
+          '0': { name: punctuation.section.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.end.racket
+          '0': { name: punctuation.section.end.racket }
         patterns:
           - include: '#default-args-struct-content'
-      - <<: *default_args 
+      - <<: *default_args
         begin: '\['
         end: '\]'
-      - <<: *default_args 
+      - <<: *default_args
         begin: '{'
         end: '}'
 
@@ -662,33 +629,31 @@ repository:
     patterns:
       - begin: (?x) (?<=[(\[{]) \s* (\|)
         beginCaptures:
-          '1':
-            name: punctuation.verbatim.begin.racket
+          '1': { name: punctuation.verbatim.begin.racket }
         end: '\|'
         endCaptures:
-          '0': punctuation.verbatim.end.racket
+          '0': { name: punctuation.verbatim.end.racket }
         contentName: variable.other.member.racket
       - begin: >-
           (?x) (?<=[(\[{]) \s*
             (\#% | \\\  | [^\#()\[\]{}",'`;\s])
         beginCaptures:
-          '1':
-            name: variable.other.member.racket
+          '1': { name: variable.other.member.racket }
         end: "(?=[()\\[\\]{}\",'`;\\s])"
         contentName: variable.other.member.racket
         patterns:
           - match: '\\ '
           - begin: '\|'
             beginCaptures:
-              '0': punctuation.verbatim.begin.racket
+              '0': { name: punctuation.verbatim.begin.racket }
             end: '\|'
             endCaptures:
-              '0': punctuation.verbatim.end.racket
+              '0': { name: punctuation.verbatim.end.racket }
 
   dot:
     patterns:
       - name: punctuation.accessor.racket
-        match: (?x) (?<=^|[()\[\]{}",'`;\s]) \. (?=$|[()\[\]{}",'`;\s])
+        match: (?x)  \. (?=$|[()\[\]{}",'`;\s])
 
   list:
     patterns:
@@ -696,12 +661,10 @@ repository:
         name: meta.list.racket
         begin: '\('
         beginCaptures:
-          '0':
-            name: punctuation.section.list.begin.racket
+          '0': { name: punctuation.section.list.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.list.end.racket
+          '0': { name: punctuation.section.list.end.racket }
         patterns:
           - include: '#list-content'
       - <<: *list
@@ -720,22 +683,20 @@ repository:
 
   hash:
     patterns:
-      - &hash
+      - &meta_hash
         name: meta.hash.racket
         begin: '(?x) \# hash(?: eq(?: v)?)? \('
         beginCaptures:
-          '0':
-            name: punctuation.section.hash.begin.racket
+          '0': { name: punctuation.section.hash.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.hash.end.racket
+          '0': { name: punctuation.section.hash.end.racket }
         patterns:
           - include: '#hash-content'
-      - <<: *hash
+      - <<: *meta_hash
         begin: '(?x) \# hash(?: eq(?: v)?)? \['
         end: '\]'
-      - <<: *hash
+      - <<: *meta_hash
         begin: '(?x) \# hash(?: eq(?: v)?)? {'
         end: '}'
 
@@ -750,19 +711,17 @@ repository:
         name: meta.list.racket
         begin: '\('
         beginCaptures:
-          '0':
-            name: punctuation.section.pair.begin.racket
+          '0': { name: punctuation.section.pair.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.pair.end.racket
+          '0': { name: punctuation.section.pair.end.racket }
         patterns:
           - include: '#pair-content'
       - <<: *pairing
         begin: '\['
         end: '\]'
       - <<: *pairing
-        begin: "{"
+        begin: '{'
         end: '}'
 
   pair-content:
@@ -777,12 +736,10 @@ repository:
         name: meta.vector.racket
         begin: '(?x) \# (?: fl | Fl | fx | Fx)? [0-9]* \('
         beginCaptures:
-          '0':
-            name: punctuation.section.vector.begin.racket
+          '0': { name: punctuation.section.vector.begin.racket }
         end: '\)'
         endCaptures:
-          '0':
-            name: punctuation.section.vector.end.racket
+          '0': { name: punctuation.section.vector.end.racket }
         patterns:
           - include: '$base'
       - <<: *vector
@@ -796,28 +753,26 @@ repository:
     patterns:
       - begin: (?x) (?<=[(\[{]) \s* (\|)
         beginCaptures:
-          '1':
-            name: punctuation.verbatim.begin.racket
+          '1': { name: punctuation.verbatim.begin.racket }
         end: '\|'
         endCaptures:
-          '0': punctuation.verbatim.end.racket
+          '0': { name: punctuation.verbatim.end.racket }
         contentName: entity.name.constant
-      - begin: |
+      - begin: >-
           (?x) (?<=[(\[{]) \s*
             (\#% | \\\  | [^\#()\[\]{}",'`;\s])
         beginCaptures:
-          '1':
-            name: entity.name.constant
+          '1': { name: entity.name.constant }
         end: "(?=[()\\[\\]{}\",'`;\\s])"
         contentName: entity.name.constant
         patterns:
           - match: '\\ '
           - begin: '\|'
             beginCaptures:
-              '0': punctuation.verbatim.begin.racket
+              '0': { name: punctuation.verbatim.begin.racket }
             end: '\|'
             endCaptures:
-              '0': punctuation.verbatim.end.racket
+              '0': { name: punctuation.verbatim.end.racket }
 
   number:
     patterns:
@@ -830,70 +785,51 @@ repository:
   number-dec:
     patterns:
       - name: constant.numeric.racket
-        match: >-
-          (?x)
-            (?<=^|[()\[\]{}",'`;\s])
-            (?: (?: \#[dD])?(?: \#[eEiI])? | (?: \#[eEiI])?(?: \#[dD])?)
-            (?:
-              # Complex numbers with @
-              (?:
-                (?:
-                  (?:
-                    (?:
-                      (?: [+-]? \d+ \#* \/ \d+ \#*)|
-                      (?: [+-]? \d+ \. \d+ \#*) |
-                      (?: [+-]? \d+ \#* \. \#*) |
-                      (?: [+-]? \d+ \#*)
-                    ) (?: [sldefSLDEF] [+-]? \d+)?
-                  ) |
-                  [+-] (?: (?: [iI][nN][fF])\.[0f] | (?: [nN][aA][nN])\.[0f])
-                ) @
-                (?:
-                  (?:
-                    (?:
-                      (?: [+-]? \d+ \#* \/ \d+ \#*)|
-                      (?: [+-]? \d+ \. \d+ \#*) |
-                      (?: [+-]? \d+ \#* \. \#*) |
-                      (?: [+-]? \d+ \#*)
-                    ) (?: [sldefSLDEF] [+-]? \d+)?
-                  ) |
-                  [+-] (?: (?: [iI][nN][fF])\.[0f] | (?: [nN][aA][nN])\.[0f])
-                )
-              ) |
-              # Complex numbers
-              (?:
-                (?:
-                  (?:
-                    (?:
-                      (?: [+-]? \d+ \#* \/ \d+ \#*)|
-                      (?: [+-]? \d+ \. \d+ \#*) |
-                      (?: [+-]? \d+ \#* \. \#*) |
-                      (?: [+-]? \d+ \#*)
-                    ) (?: [sldefSLDEF] [+-]? \d+)?
-                  ) |
-                  [+-] (?: (?: [iI][nN][fF])\.[0f] | (?: [nN][aA][nN])\.[0f])
-                )? [+-]
-                (?:
-                  (?:
-                    (?:
-                      (?: [+-]? \d+ \#* \/ \d+ \#*)|
-                      (?: [+-]? \d+ \. \d+ \#*) |
-                      (?: [+-]? \d+ \#* \. \#*) |
-                      (?: [+-]? \d+ \#*)
-                    ) (?: [sldefSLDEF] [+-]? \d+)?
-                  ) |
-                  (?: (?: [iI][nN][fF])\.[0f] | (?: [nN][aA][nN])\.[0f]) |
-                ) i
-              ) |
-              [+-] (?: (?: [iI][nN][fF])\.[0f] | (?: [nN][aA][nN])\.[0f]) |
-              # Real numbers
-              (?:
-                (?: [+-]? \d+ \#* \/ \d+ \#*)|
-                (?: [+-]? \d* \. \d+ \#*) |
-                (?: [+-]? \d+ \#* \. \#*) |
-                (?: [+-]? \d+ \#*)
-              ) (?: [sldefSLDEF] [+-]? \d+)?
-            ) (?=$|[()\[\]{}",'`;\s])
+        match: !concat
+          - *extended
+          - *begin_boundary_lb
+          - '(?: (?:\#[dD])?(?: \#[eEiI])? | (?: \#[eEiI])?(?: \#[dD])?)'
+          - '(?: '
+          # Complex numbers with @
+          - !concat &num_dec_complex_at
+            - '(?: '
+            - !concat &num_dec_main_full
+              - '(?: '
+              - !concat &num_dec_main
+                - '(?: '
+                - !concat &num_dec_main_part
+                  - '(?: '
+                  - !concat &num_dec_1
+                    - !concat &num_dec_begin_1 [!concat &num_begin_1 ['(?: ', *sign], *digit_10]
+                    - !concat [*hash, *backslash, *digit_10]
+                    - !concat &num_part_end [*hash, ') | ']
+                  - !concat &num_dec_2 [*num_dec_begin_1, *dot, *digit_10, *num_part_end]
+                  - !concat &num_dec_3 [*num_dec_begin_1, *hash, *dot, *num_part_end]
+                  - !concat &num_dec_4 [*num_dec_begin_1, *hash, ')']
+                  - ') '
+                  - !concat &exp_dec ['(?: ', *exp_mark, *sign, *digit_10, ')?']
+                - ') | '
+              - !concat &sign_inexact_special [*req_sign, *inexact_special]
+              - ')'
+            - ' @ '
+            - *num_dec_main_full
+            - ') | '
+          # Complex numbers
+          - !concat &num_dec_complex
+            - !concat ['(?: ', *num_dec_main_full, '?']
+            - !concat [*req_sign, '(?: ', *num_dec_main, *inexact_special, ')', ' i ) | ']
+          - !concat [*sign_inexact_special, ' | ']
+          # Real numbers
+          - !concat &num_dec_real
+            - '(?: '
+            - *num_dec_1
+            - !concat [*num_begin_1, *digit_10*, *dot, *digit_10, *num_part_end]
+            - *num_dec_3
+            - *num_dec_4
+            - ') '
+            - *exp_dec
+          - ')'
+          - *num_end
 
   number-oct:
     patterns:
@@ -908,7 +844,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*)|
+                      (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*) |
                       (?: [+-]? [0-7]+ \. [0-7]+ \#*) |
                       (?: [+-]? [0-7]+ \#* \. \#*) |
                       (?: [+-]? [0-7]+ \#*)
@@ -919,7 +855,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*)|
+                      (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*) |
                       (?: [+-]? [0-7]+ \. [0-7]+ \#*) |
                       (?: [+-]? [0-7]+ \#* \. \#*) |
                       (?: [+-]? [0-7]+ \#*)
@@ -933,7 +869,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*)|
+                      (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*) |
                       (?: [+-]? [0-7]+ \. [0-7]+ \#*) |
                       (?: [+-]? [0-7]+ \#* \. \#*) |
                       (?: [+-]? [0-7]+ \#*)
@@ -944,7 +880,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*)|
+                      (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*) |
                       (?: [+-]? [0-7]+ \. [0-7]+ \#*) |
                       (?: [+-]? [0-7]+ \#* \. \#*) |
                       (?: [+-]? [0-7]+ \#*)
@@ -956,7 +892,7 @@ repository:
               [+-] (?: (?: [iI][nN][fF])\.[0f] | (?: [nN][aA][nN])\.[0f]) |
               # Real numbers
               (?:
-                (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*)|
+                (?: [+-]? [0-7]+ \#* \/ [0-7]+ \#*) |
                 (?: [+-]? [0-7]* \. [0-7]+ \#*) |
                 (?: [+-]? [0-7]+ \#* \. \#*) |
                 (?: [+-]? [0-7]+ \#*)
@@ -976,7 +912,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [01]+ \#* \/ [01]+ \#*)|
+                      (?: [+-]? [01]+ \#* \/ [01]+ \#*) |
                       (?: [+-]? [01]+ \. [01]+ \#*) |
                       (?: [+-]? [01]+ \#* \. \#*) |
                       (?: [+-]? [01]+ \#*)
@@ -987,7 +923,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [01]+ \#* \/ [01]+ \#*)|
+                      (?: [+-]? [01]+ \#* \/ [01]+ \#*) |
                       (?: [+-]? [01]+ \. [01]+ \#*) |
                       (?: [+-]? [01]+ \#* \. \#*) |
                       (?: [+-]? [01]+ \#*)
@@ -1001,7 +937,7 @@ repository:
                 (?:
                   (?:
                    (?:
-                      (?: [+-]? [01]+ \#* \/ [01]+ \#*)|
+                      (?: [+-]? [01]+ \#* \/ [01]+ \#*) |
                       (?: [+-]? [01]+ \. [01]+ \#*) |
                       (?: [+-]? [01]+ \#* \. \#*) |
                       (?: [+-]? [01]+ \#*)
@@ -1012,7 +948,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [01]+ \#* \/ [01]+ \#*)|
+                      (?: [+-]? [01]+ \#* \/ [01]+ \#*) |
                       (?: [+-]? [01]+ \. [01]+ \#*) |
                       (?: [+-]? [01]+ \#* \. \#*) |
                       (?: [+-]? [01]+ \#*)
@@ -1024,7 +960,7 @@ repository:
               [+-] (?: (?: [iI][nN][fF])\.[0f] | (?: [nN][aA][nN])\.[0f]) |
               # Real numbers
               (?:
-                (?: [+-]? [01]+ \#* \/ [01]+ \#*)|
+                (?: [+-]? [01]+ \#* \/ [01]+ \#*) |
                 (?: [+-]? [01]* \. [01]+ \#*) |
                 (?: [+-]? [01]+ \#* \. \#*) |
                 (?: [+-]? [01]+ \#*)
@@ -1044,7 +980,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*)|
+                      (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*) |
                       (?: [+-]? [0-9a-fA-F] \. [0-9a-fA-F]+ \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \#* \. \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \#*)
@@ -1055,7 +991,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*)|
+                      (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \. [0-9a-fA-F]+ \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \#* \. \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \#*)
@@ -1069,7 +1005,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*)|
+                      (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \. [0-9a-fA-F]+ \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \#* \. \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \#*)
@@ -1080,7 +1016,7 @@ repository:
                 (?:
                   (?:
                     (?:
-                      (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*)|
+                      (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \. [0-9a-fA-F]+ \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \#* \. \#*) |
                       (?: [+-]? [0-9a-fA-F]+ \#*)
@@ -1092,7 +1028,7 @@ repository:
               [+-] (?: (?: [iI][nN][fF])\.[0f] | (?: [nN][aA][nN])\.[0f]) |
               # Real numbers
               (?:
-                (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*)|
+                (?: [+-]? [0-9a-fA-F]+ \#* \/ [0-9a-fA-F]+ \#*) |
                 (?: [+-]? [0-9a-fA-F]* \. [0-9a-fA-F]+ \#*) |
                 (?: [+-]? [0-9a-fA-F]+ \#* \. \#*) |
                 (?: [+-]? [0-9a-fA-F]+ \#*)
@@ -1105,35 +1041,31 @@ repository:
       - include: '#comment-block'
       - include: '#comment-sexp'
 
-  comment-sexp:
-    patterns:
-      - name: comment.sexp.racket
-        match: "(?<=^|[()\\[\\]{}\",'`;\\s])#;"
-
   comment-line:
     patterns:
       - name: comment.line.unix.racket
         match: "(#!)[ \/].*$"
         beginCaptures:
-          '1':
-            name: punctuation.definition.comment.racket
+          '1': { name: punctuation.definition.comment.racket }
       - name: comment.line.semicolon.racket
         match: (?x) (?<=^|[()\[\]{}",'`;\s]) (;) .* $
         captures:
-          '1':
-            name: punctuation.definition.comment.racket
+          '1': { name: punctuation.definition.comment.racket }
+
+  comment-sexp:
+    patterns:
+      - name: comment.sexp.racket
+        match: "(?<=^|[()\\[\\]{}\",'`;\\s])#;"
 
   comment-block:
     patterns:
       - name: comment.block.racket
         begin: "#\\|"
         beginCaptures:
-          '0':
-            name: punctuation.definition.comment.begin.racket
+          '0': { name: punctuation.definition.comment.begin.racket }
         end: "\\|#"
         endCaptures:
-          '0':
-            name: punctuation.definition.comment.end.racket
+          '0': { name: punctuation.definition.comment.end.racket }
         patterns:
           - include: '#comment-block'
 
@@ -1141,13 +1073,11 @@ repository:
     patterns:
       - begin: (?x) (?<=^|[()\[\]{}",'`;\s]) (\|)
         beginCaptures:
-          '1':
-            name: punctuation.verbatim.begin.racket
+          '1': { name: punctuation.verbatim.begin.racket }
         end: '\|'
         endCaptures:
-          '0':
-            name: punctuation.verbatim.end.racket
-      - begin: |
+          '0': { name: punctuation.verbatim.end.racket }
+      - begin: >-
           (?x) (?<=^|[()\[\]{}",'`;\s])
           (?: \#% | \\\  | [^\#()\[\]{}",'`;\s])
         end: "(?=[()\\[\\]{}\",'`;\\s])"
@@ -1155,42 +1085,35 @@ repository:
           - match: '\\ '
           - begin: '\|'
             beginCaptures:
-              '0':
-                name: punctuation.verbatim.begin.racket
+              '0': { name: punctuation.verbatim.begin.racket }
             end: '\|'
             endCaptures:
-              '0':
-                name: punctuation.verbatim.end.racket
+              '0': { name: punctuation.verbatim.end.racket }
 
   struct-field:
     patterns:
       - contentName: variable.other.member.racket
         begin: (?x) (?<=^|[()\[\]{}",'`;\s]) (\|)
         beginCaptures:
-          '1':
-            name: punctuation.verbatim.begin.racket
+          '1': { name: punctuation.verbatim.begin.racket }
         end: '\|'
         endCaptures:
-          '0':
-            name: punctuation.verbatim.end.racket
+          '0': { name: punctuation.verbatim.end.racket }
       - contentName: variable.other.member.racket
-        begin: |
+        begin: >-
           (?x) (?<=^|[()\[\]{}",'`;\s])
           (\#% | \\\  | [^\#()\[\]{}",'`;\s])
         beginCaptures:
-          '1':
-            name: variable.other.member.racket
+          '1': { name: variable.other.member.racket }
         end: "(?=[()\\[\\]{}\",'`;\\s])"
         patterns:
           - match: '\\ '
           - begin: '\|'
             beginCaptures:
-              '0':
-                name: punctuation.verbatim.begin.racket
+              '0': { name: punctuation.verbatim.begin.racket }
             end: '\|'
             endCaptures:
-              '0':
-                name: punctuation.verbatim.end.racket
+              '0': { name: punctuation.verbatim.end.racket }
 
   keyword:
     patterns:
@@ -1212,9 +1135,9 @@ repository:
       - name: entity.name.type.racket
         match: >-
           (?x)
-            (?<=^|[()\[\]{}",'`;\s])
-            (?: Any | Boolean | Boolean | Char | EmptyList | False | Integer | Natural | Number | Rational | Real | String | Symbol | True)
-            (?=[()\[\]{}",'`;\s])
+          (?<=^|[()\[\]{}",'`;\s])
+          Any | Boolean | Boolean | Char | EmptyList | False | Integer | Natural | Number | Rational | Real | String | Symbol | True
+          (?=[()\[\]{}",'`;\s])
 
   character:
     patterns:
@@ -1246,62 +1169,54 @@ repository:
   here-string:
     patterns:
       - name: string.here.racket
-        begin: "#<<(.*)$"
+        begin: '#<<(.*)$'
         end: "^\\1$"
 
   base-string:
     patterns:
       - name: string.quoted.double.racket
-        begin: "\""
+        begin: '"'
         beginCaptures:
-          '0':
-            - name: punctuation.definition.string.begin.racket
-        end: "\""
+          '0': { name: punctuation.definition.string.begin.racket }
+        end: '"'
         endCaptures:
-          '0':
-            - name: punctuation.definition.string.end.racket
+          '0': { name: punctuation.definition.string.end.racket }
         patterns:
           - include: '#escape-char'
 
   byte-string:
     patterns:
       - name: string.byte.racket
-        begin: "#\""
+        begin: '#"'
         beginCaptures:
-          '0':
-            - name: punctuation.definition.string.begin.racket
-        end: "\""
+          '0': { name: punctuation.definition.string.begin.racket }
+        end: '"'
         endCaptures:
-          '0':
-            - name: punctuation.definition.string.end.racket
+          '0': { name: punctuation.definition.string.end.racket }
         patterns:
           - include: '#escape-char-base'
 
   regexp-string:
     patterns:
       - name: string.regexp.racket
-        begin: "#(r|p)x\""
+        begin: '#(r|p)x"'
         beginCaptures:
-          '0':
-            - name: punctuation.definition.string.begin.racket
-        end: "\""
+          '0': { name: punctuation.definition.string.begin.racket }
+        end: '"'
         endCaptures:
-          '0':
-            - name: punctuation.definition.string.end.racket
+          '0': { name: punctuation.definition.string.end.racket }
         patterns:
           - include: '#escape-char-base'
 
   regexp-byte-string:
     patterns:
       - name: string.regexp.byte.racket
-        begin: "#(r|p)x#\""
+        begin: '#(r|p)x#"'
         beginCaptures:
-          '0':
-            - name: punctuation.definition.string.begin.racket
-        end: "\""
+          '0': { name: punctuation.definition.string.begin.racket }
+        end: '"'
         endCaptures:
-          '0':
-            - name: punctuation.definition.string.end.racket
+          '0': { name: punctuation.definition.string.end.racket }
         patterns:
           - include: '#escape-char-base'
 
@@ -1320,26 +1235,27 @@ repository:
       - include: '#escape-char-base'
       - name: constant.character.escape.racket
         match: >-
-         (?x) \\
-           (?:
-            (?: u[\da-fA-F]{1,4}) |
-            (?: U[\da-fA-F]{1,8})
-           )
+          (?x) \\
+            (?:
+             (?: u[\da-fA-F]{1,4}) |
+             (?: U[\da-fA-F]{1,8})
+            )
       - include: '#escape-char-error'
 
   escape-char-base:
     patterns:
       - name: constant.character.escape.racket
-        match: >-
-         (?x) \\
-           (?:
-            (?: [abtnvfre"'\\]) |
-            (?: [0-7]{1,3}) |
-            (?: x[\da-fA-F]{1,2})
-          )
+        match: !concat
+          - *extended
+          - '\\'
+          - '(?:'
+          - !concat
+            - "(?: [abtnvfre\"'\\\\]) |"
+            - '(?: [0-7]{1,3}) |'
+            - '(?: x[\da-fA-F]{1,2})'
+          - )
 
   escape-char-error:
     patterns:
       - name: invalid.illegal.escape.racket
         match: '\\.'
-...

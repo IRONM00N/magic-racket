@@ -11,5 +11,6 @@
     "editor.formatOnType": true,
     "[lisp]": {
         "editor.wordSeparators": "`|;:'\",()"
-    }
+    },
+    "yaml.customTags": ["!concat sequence"],
 }

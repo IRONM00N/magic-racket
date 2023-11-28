@@ -1,6 +1,6 @@
 {
   "name": "Racket Student Language",
-  "scopeName": "source.racket-sl",
+  "scopeName": "source.racket",
   "firstLineMatch": "#lang htdp/[bia]sl\\+?",
   "filetypes": [
     "rkt"
@@ -50,9 +50,6 @@
         },
         {
           "include": "#symbol"
-        },
-        {
-          "include": "#variable"
         },
         {
           "include": "#signature"
@@ -137,7 +134,7 @@
     "format": {
       "patterns": [
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (e?printf | format) \\s* (\")",
+          "begin": "(?x) (?<=[(\\[{]) \\s*(e?printf | format) \\s*(\")",
           "beginCaptures": {
             "1": {
               "name": "support.function.racket"
@@ -173,7 +170,7 @@
           "include": "#struct"
         },
         {
-          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  : | signature | mixed | - | < | <= | > | >= | abs | acos | add1 | angle | asin | atan | ceiling | complex\\? | conjugate | cos | cosh | \n  current-seconds | denominator | even\\? | exact->inexact | exact\\? | exp | expt | floor | gcd | imag-part | inexact->exact | inexact\\? | \n  integer->char | integer-sqrt | integer\\? | lcm | log | magnitude | make-polar | make-rectangular | max | min | modulo | negative\\? | \n  number->string | number->string-digits | number\\? | numerator | odd\\? | positive\\? | quotient | random | rational\\? | real-part | real? | \n  remainder | round | sgn | sin | sinh | sqr | sqrt | sub1 | tan | zero\\? | boolean->string | boolean=\\? | boolean\\? | false\\? | not | \n  symbol->string | symbol=\\? | symbol\\? | append | assoc | assq | caaar | caadr | caar | cadar | cadddr | caddr | cadr | car | cdaar | cdadr | \n  cdar | cddar | cdddr | cddr | cdr | cons | cons\\? | eighth | empty\\? | fifth | first | for-each | fourth | length | list | list\\* | list-ref |\n  list\\? | make-list | member | member\\? | memq | memq\\? | memv | null\\? | range | remove | remove-all | rest | reverse | second | seventh |\n  sixth | third | make-posn | posn-x | posn-y | posn\\? | set-posn-x! | set-posn-y! | char->integer | char-alphabetic? | char-ci<=\\? | \n  char-ci<\\? | char-ci=\\? | char-ci>=\\? | char-ci>\\? | char-downcase | char-lower-case\\? | char-numeric\\? | char-upcase | char-upper-case\\? |\n  char-whitespace\\? | char<=\\? | char<\\? | char=\\? | char>=\\? | char>\\? | char\\? | explode | implode | int->string | list->string | \n  make-string | replicate | string | string->int | string->list | string->number | string->symbol | string-alphabetic\\? | string-contains-ci\\? |\n  string-contains\\? | string-copy | string-downcase | string-ith | string-length | string-lower-case? | string-numeric? | string-ref | \n  string-upcase | string-upper-case\\? | string-whitespace\\? | string\\? | substring | image=\\? | image\\? | =~ | current-milliseconds | \n  eof-object\\? | eq\\? | equal\\? | equal\\~? | eqv\\? | error | exit | force | gensym | identity | promise\\? | sleep | struct\\? | void |\n  string-append | string-ci<=\\? | string-ci<\\? | string-ci=\\? | string-ci>=\\? | string-ci>\\? | string<=\\? | string<\\? | string=\\? |\n  string>=\\? | string>\\? | posn | \\* | \\+ | \\/ | = | andmap | apply | argmax | argmin | build-list | build-string | compose | filter |\n  foldl | foldr | map | memf | ormap | procedure\\? | quicksort | sort | display | newline | pretty-print | print | read | with-input-from-file |\n  with-input-from-string | with-output-to-file | with-output-to-string | write | build-vector | list->vector | make-vector | vector | vector->list |\n  vector-length | vector-ref | vector-set! | vector\\? | box | box\\? | set-box! | unbox | hash-copy | hash-count | hash-eq\\? | hash-equal\\? |\n  hash-eqv\\? | hash-for-each | hash-has-key\\? | hash-map | hash-ref | hash-ref! | hash-remove | hash-remove! | hash-set | hash-set! | \n  hash-update | hash-update! | hash\\? | make-hash | make-hasheq | make-hasheqv | make-immutable-hash | make-immutable-hasheq | \n  make-immutable-hasheqv | and | or\n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "match": "(?x)(?<=$|[()\\[\\]{}\\\",'`;\\s])(: | signature | mixed | - | < | <= | > | >= | abs | acos | add1 | angle | asin | atan | ceiling | complex\\? | conjugate | cos | cosh |  current-seconds | denominator | even\\? | exact->inexact | exact\\? | exp | expt | floor | gcd | imag-part | inexact->exact | inexact\\? |  integer->char | integer-sqrt | integer\\? | lcm | log | magnitude | make-polar | make-rectangular | max | min | modulo | negative\\? |  number->string | number->string-digits | number\\? | numerator | odd\\? | positive\\? | quotient | random | rational\\? | real-part | real? |  remainder | round | sgn | sin | sinh | sqr | sqrt | sub1 | tan | zero\\? | boolean->string | boolean=\\? | boolean\\? | false\\? | not |  symbol->string | symbol=\\? | symbol\\? | append | assoc | assq | caaar | caadr | caar | cadar | cadddr | caddr | cadr | car | cdaar | cdadr |  cdar | cddar | cdddr | cddr | cdr | cons | cons\\? | eighth | empty\\? | fifth | first | for-each | fourth | length | list | list\\* | list-ref | list\\? | make-list | member | member\\? | memq | memq\\? | memv | null\\? | range | remove | remove-all | rest | reverse | second | seventh | sixth | third | make-posn | posn-x | posn-y | posn\\? | set-posn-x! | set-posn-y! | char->integer | char-alphabetic? | char-ci<=\\? |  char-ci<\\? | char-ci=\\? | char-ci>=\\? | char-ci>\\? | char-downcase | char-lower-case\\? | char-numeric\\? | char-upcase | char-upper-case\\? | char-whitespace\\? | char<=\\? | char<\\? | char=\\? | char>=\\? | char>\\? | char\\? | explode | implode | int->string | list->string |  make-string | replicate | string | string->int | string->list | string->number | string->symbol | string-alphabetic\\? | string-contains-ci\\? | string-contains\\? | string-copy | string-downcase | string-ith | string-length | string-lower-case? | string-numeric? | string-ref |  string-upcase | string-upper-case\\? | string-whitespace\\? | string\\? | substring | image=\\? | image\\? | =~ | current-milliseconds |  eof-object\\? | eq\\? | equal\\? | equal\\~? | eqv\\? | error | exit | force | gensym | identity | promise\\? | sleep | struct\\? | void | string-append | string-ci<=\\? | string-ci<\\? | string-ci=\\? | string-ci>=\\? | string-ci>\\? | string<=\\? | string<\\? | string=\\? | string>=\\? | string>\\? | posn | \\* | \\+ | \\/ | = | andmap | apply | argmax | argmin | build-list | build-string | compose | filter | foldl | foldr | map | memf | ormap | procedure\\? | quicksort | sort | display | newline | pretty-print | print | read | with-input-from-file | with-input-from-string | with-output-to-file | with-output-to-string | write | build-vector | list->vector | make-vector | vector | vector->list | vector-length | vector-ref | vector-set! | vector\\? | box | box\\? | set-box! | unbox | hash-copy | hash-count | hash-eq\\? | hash-equal\\? | hash-eqv\\? | hash-for-each | hash-has-key\\? | hash-map | hash-ref | hash-ref! | hash-remove | hash-remove! | hash-set | hash-set! |  hash-update | hash-update! | hash\\? | make-hash | make-hasheq | make-hasheqv | make-immutable-hash | make-immutable-hasheq |  make-immutable-hasheqv | and | or)(?=$|[()\\[\\]{}\\\",'`;\\s])",
           "captures": {
             "1": {
               "name": "support.function.racket"
@@ -181,27 +178,20 @@
           }
         },
         {
-          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  in-range | in-naturals\n) (?=$|[()\\[\\]{}\\\",'`;\\s])   ",
-          "captures": {
-            "1": {
-              "name": null
-            }
-          }
-        },
-        {
-          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  check-expect | check-random | check-within | check-error | check-member-of | check-satisfied | check-range | check-range\n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "match": "(?x)(?<=$|[()\\[\\]{}\\\",'`;\\s])(in-range | in-naturals)(?=$|[()\\[\\]{}\\\",'`;\\s])",
           "captures": {
             "1": {
               "name": "support.function.racket"
             }
           }
-        }
-      ]
-    },
-    "builtin-variables": {
-      "patterns": [
+        },
         {
-          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) () (?<=$|[()\\[\\]{}\\\",'`;\\s])"
+          "match": "(?x)(?<=$|[()\\[\\]{}\\\",'`;\\s])(check-expect | check-random | check-within | check-error | check-member-of | check-satisfied | check-range | check-range)(?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "support.function.racket"
+            }
+          }
         }
       ]
     },
@@ -223,7 +213,7 @@
           "include": "#control"
         },
         {
-          "match": "(?x) (?<=[(\\[{]) \\s* (local) \\s+ (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "match": "(?x) (?<=[(\\[{]) \\s*(local) \\s+(?=$|[()\\[\\]{}\\\",'`;\\s])",
           "captures": {
             "1": {
               "name": "keyword.local.racket"
@@ -231,7 +221,7 @@
           }
         },
         {
-          "match": "(?x) (?<=[(\\[{]) \\s* (begin|begin0) \\s+ (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "match": "(?x) (?<=[(\\[{]) \\s*(begin|begin0) \\s+(?=$|[()\\[\\]{}\\\",'`;\\s])",
           "captures": {
             "1": {
               "name": "keyword.begin.racket"
@@ -239,10 +229,34 @@
           }
         },
         {
-          "match": "(?x) (?<=[(\\[{]) \\s* (time) \\s+ (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "match": "(?x) (?<=[(\\[{]) \\s*(time) \\s+(?=$|[()\\[\\]{}\\\",'`;\\s])",
           "captures": {
             "1": {
               "name": "keyword.time.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=[(\\[{]) \\s*(class) \\s+(?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.this.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=[(\\[{]) \\s*(this|this%) \\s+(?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.this.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=[(\\[{]) \\s*(send) \\s+(?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.send.racket"
             }
           }
         },
@@ -259,7 +273,7 @@
     "control": {
       "patterns": [
         {
-          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  \\#%require | require | local-require\n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "match": "(?x)(?<=$|[()\\[\\]{}\\\",'`;\\s])(\\#%require | require | local-require)(?=$|[()\\[\\]{}\\\",'`;\\s])",
           "captures": {
             "1": {
               "name": "keyword.control.require.racket"
@@ -267,7 +281,7 @@
           }
         },
         {
-          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  \\#%provide | provide\n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "match": "(?x)(?<=$|[()\\[\\]{}\\\",'`;\\s])(\\#%provide | provide)(?=$|[()\\[\\]{}\\\",'`;\\s])",
           "captures": {
             "1": {
               "name": "keyword.control.provide.racket"
@@ -275,7 +289,7 @@
           }
         },
         {
-          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  cond | else | match | if | when | unless | case | choice \n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "match": "(?x)(?<=$|[()\\[\\]{}\\\",'`;\\s])(cond | else | match | if | when | unless | case | choice)(?=$|[()\\[\\]{}\\\",'`;\\s])",
           "captures": {
             "1": {
               "name": "keyword.control.conditional.racket"
@@ -283,7 +297,15 @@
           }
         },
         {
-          "match": "(?x) (?<=$|[()\\[\\]{}\\\",'`;\\s]) (\n  for/list | for\\*/list | for/or | for\\*/or | for/and | for\\*/and |\n  for/sum | for*/sum | for/product | for*/product | for/string | \n  for*/string   \n) (?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "match": "(?x)(?<=$|[()\\[\\]{}\\\",'`;\\s])(for\\*?/list | for\\*?/or | for\\*?/and | for\\*?/sum |  for\\*?/product | for\\*?/string)(?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.control.flow.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x)(?<=$|[()\\[\\]{}\\\",'`;\\s])(for\\*? | for\\*?/vector | for\\*?/hash | for\\*?/hasheq |  for\\*?/hasheqv | for\\*?/hashalw | for\\*?/lists | for\\*?/first |  for\\*?/last | for\\*?/foldr? | for\\*?/foldr/derived | do)(?=$|[()\\[\\]{}\\\",'`;\\s])",
           "captures": {
             "1": {
               "name": "keyword.control.flow.racket"
@@ -311,7 +333,7 @@
     "define-struct": {
       "patterns": [
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (define-struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) \\s* (\\()",
+          "begin": "(?x)(?<=[(\\[{]) \\s*(define-struct) \\s+([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) \\s*(\\()",
           "beginCaptures": {
             "1": {
               "name": "storage.type.racket"
@@ -336,7 +358,7 @@
           ]
         },
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (define-struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) \\s* (\\[)",
+          "begin": "(?x)(?<=[(\\[{]) \\s*(define-struct) \\s+([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) \\s*(\\[)",
           "beginCaptures": {
             "1": {
               "name": "storage.type.racket"
@@ -361,7 +383,7 @@
           ]
         },
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (define-struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) \\s* (\\{)",
+          "begin": "(?x)(?<=[(\\[{]) \\s*(define-struct) \\s+([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) \\s*(\\{)",
           "beginCaptures": {
             "1": {
               "name": "storage.type.racket"
@@ -404,10 +426,10 @@
     "define-val": {
       "patterns": [
         {
-          "match": "(?x) (?<=[(\\[{]) \\s* (define(?: (?: -for)?-syntax)?) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)",
+          "match": "(?x)(?<=[(\\[{]) \\s*((?:define(?: (?: -for)?-syntax)?) | define\\/(?:public|private|override|public-final))\\s+([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)",
           "captures": {
             "1": {
-              "name": "storage.type.make-struct.racket"
+              "name": "storage.type.define.racket"
             },
             "2": {
               "name": "entity.name.variable.racket"
@@ -419,10 +441,10 @@
     "define-vals": {
       "patterns": [
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (define-(?: values(?: -for-syntax)? | syntaxes)?) \\s* (\\()",
+          "begin": "(?x)(?<=[(\\[{]) \\s*(define-(?: values(?: -for-syntax)? | syntaxes)?) \\s*(\\()",
           "beginCaptures": {
             "1": {
-              "name": "storage.type.racket"
+              "name": "storage.type.define-many.racket"
             },
             "2": {
               "name": "punctuation.section.begin.racket"
@@ -442,10 +464,10 @@
           ]
         },
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (define-(?: values(?: -for-syntax)? | syntaxes)?) \\s* (\\[)",
+          "begin": "(?x)(?<=[(\\[{]) \\s*(define-(?: values(?: -for-syntax)? | syntaxes)?) \\s*(\\[)",
           "beginCaptures": {
             "1": {
-              "name": "storage.type.racket"
+              "name": "storage.type.define-many.racket"
             },
             "2": {
               "name": "punctuation.section.begin.racket"
@@ -465,10 +487,10 @@
           ]
         },
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (define-(?: values(?: -for-syntax)? | syntaxes)?) \\s* ({)",
+          "begin": "(?x)(?<=[(\\[{]) \\s*(define-(?: values(?: -for-syntax)? | syntaxes)?) \\s*({)",
           "beginCaptures": {
             "1": {
-              "name": "storage.type.racket"
+              "name": "storage.type.define-many.racket"
             },
             "2": {
               "name": "punctuation.section.begin.racket"
@@ -492,13 +514,16 @@
     "let": {
       "patterns": [
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (let | let\\* | letrec | shared) \\s+ (\\()",
+          "begin": "(?x) (?<=[(\\[{]) \\s* (let (\\s+loop)? | let\\* | letrec | shared) \\s+ (\\()",
           "beginCaptures": {
             "1": {
               "name": "storage.type.let.racket"
             },
             "2": {
-              "name": "punctuation.section.begin.racket"
+              "name": "keyword.control.flow.racket"
+            },
+            "3": {
+              "name": "punctuation.section.begin.LET.racket"
             }
           },
           "end": "\\)",
@@ -509,19 +534,19 @@
           },
           "patterns": [
             {
-              "begin": "^\\s*(\\()\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "begin": "(?:^\\s*)?(\\()\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
               "beginCaptures": {
                 "1": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.begin.let.racket"
                 },
                 "2": {
-                  "name": "entity.name.variable.racket"
+                  "name": "entity.name.variable.let.racket"
                 }
               },
               "end": "\\)",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.end.let.racket"
                 }
               },
               "patterns": [
@@ -531,19 +556,19 @@
               ]
             },
             {
-              "begin": "^\\s*(\\[)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "begin": "(?:^\\s*)?(\\[)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
               "beginCaptures": {
                 "1": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.begin.let.racket"
                 },
                 "2": {
-                  "name": "entity.name.variable.racket"
+                  "name": "entity.name.variable.let.racket"
                 }
               },
               "end": "\\]",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.end.let.racket"
                 }
               },
               "patterns": [
@@ -553,19 +578,19 @@
               ]
             },
             {
-              "begin": "^\\s*({)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "begin": "(?:^\\s*)?({)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
               "beginCaptures": {
                 "1": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.begin.let.racket"
                 },
                 "2": {
-                  "name": "entity.name.variable.racket"
+                  "name": "entity.name.variable.let.racket"
                 }
               },
               "end": "}",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.end.let.racket"
                 }
               },
               "patterns": [
@@ -583,7 +608,10 @@
               "name": "storage.type.let.racket"
             },
             "2": {
-              "name": "punctuation.section.begin.racket"
+              "name": "keyword.control.flow.racket"
+            },
+            "3": {
+              "name": "punctuation.section.begin.LET.racket"
             }
           },
           "end": "\\]",
@@ -594,19 +622,19 @@
           },
           "patterns": [
             {
-              "begin": "^\\s*(\\()\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "begin": "(?:^\\s*)?(\\()\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
               "beginCaptures": {
                 "1": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.begin.let.racket"
                 },
                 "2": {
-                  "name": "entity.name.variable.racket"
+                  "name": "entity.name.variable.let.racket"
                 }
               },
               "end": "\\)",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.end.let.racket"
                 }
               },
               "patterns": [
@@ -616,19 +644,19 @@
               ]
             },
             {
-              "begin": "^\\s*(\\[)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "begin": "(?:^\\s*)?(\\[)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
               "beginCaptures": {
                 "1": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.begin.let.racket"
                 },
                 "2": {
-                  "name": "entity.name.variable.racket"
+                  "name": "entity.name.variable.let.racket"
                 }
               },
               "end": "\\]",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.end.let.racket"
                 }
               },
               "patterns": [
@@ -638,19 +666,19 @@
               ]
             },
             {
-              "begin": "^\\s*({)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "begin": "(?:^\\s*)?({)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
               "beginCaptures": {
                 "1": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.begin.let.racket"
                 },
                 "2": {
-                  "name": "entity.name.variable.racket"
+                  "name": "entity.name.variable.let.racket"
                 }
               },
               "end": "}",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.end.let.racket"
                 }
               },
               "patterns": [
@@ -668,7 +696,10 @@
               "name": "storage.type.let.racket"
             },
             "2": {
-              "name": "punctuation.section.begin.racket"
+              "name": "keyword.control.flow.racket"
+            },
+            "3": {
+              "name": "punctuation.section.begin.LET.racket"
             }
           },
           "end": "}",
@@ -679,19 +710,19 @@
           },
           "patterns": [
             {
-              "begin": "^\\s*(\\()\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "begin": "(?:^\\s*)?(\\()\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
               "beginCaptures": {
                 "1": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.begin.let.racket"
                 },
                 "2": {
-                  "name": "entity.name.variable.racket"
+                  "name": "entity.name.variable.let.racket"
                 }
               },
               "end": "\\)",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.end.let.racket"
                 }
               },
               "patterns": [
@@ -701,19 +732,19 @@
               ]
             },
             {
-              "begin": "^\\s*(\\[)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "begin": "(?:^\\s*)?(\\[)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
               "beginCaptures": {
                 "1": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.begin.let.racket"
                 },
                 "2": {
-                  "name": "entity.name.variable.racket"
+                  "name": "entity.name.variable.let.racket"
                 }
               },
               "end": "\\]",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.end.let.racket"
                 }
               },
               "patterns": [
@@ -723,19 +754,19 @@
               ]
             },
             {
-              "begin": "^\\s*({)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
+              "begin": "(?:^\\s*)?({)\\s*([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)\\b",
               "beginCaptures": {
                 "1": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.begin.let.racket"
                 },
                 "2": {
-                  "name": "entity.name.variable.racket"
+                  "name": "entity.name.variable.let.racket"
                 }
               },
               "end": "}",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.begin.racket"
+                  "name": "punctuation.section.end.let.racket"
                 }
               },
               "patterns": [
@@ -751,7 +782,7 @@
     "set-var": {
       "patterns": [
         {
-          "match": "(?x) (?<=[(\\[{]) \\s* (set!) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)",
+          "match": "(?x)(?<=[(\\[{]) \\s*(set!) \\s+([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)",
           "captures": {
             "1": {
               "name": "keyword.set.racket"
@@ -766,7 +797,7 @@
     "define-func": {
       "patterns": [
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (define (?: (?: -for)?-syntax)?) \\s* (\\()",
+          "begin": "(?x)(?<=[(\\[{]) \\s*((?:define(?: (?: -for)?-syntax)?) | define\\/(?:public|private|override|public-final))\\s*(\\()",
           "beginCaptures": {
             "1": {
               "name": "storage.type.lambda.racket"
@@ -788,7 +819,7 @@
           ]
         },
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (define (?: (?: -for)?-syntax)?) \\s* (\\[)",
+          "begin": "(?x)(?<=[(\\[{]) \\s*((?:define(?: (?: -for)?-syntax)?) | define\\/(?:public|private|override|public-final))\\s*(\\[)",
           "beginCaptures": {
             "1": {
               "name": "storage.type.lambda.racket"
@@ -810,7 +841,7 @@
           ]
         },
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s* (define (?: (?: -for)?-syntax)?) \\s* ({)",
+          "begin": "(?x)(?<=[(\\[{]) \\s*((?:define(?: (?: -for)?-syntax)?) | define\\/(?:public|private|override|public-final))\\s*({)",
           "beginCaptures": {
             "1": {
               "name": "storage.type.lambda.racket"
@@ -861,7 +892,9 @@
           },
           "end": "\\|",
           "endCaptures": {
-            "0": "punctuation.verbatim.end.racket"
+            "0": {
+              "name": "punctuation.verbatim.end.racket"
+            }
           },
           "contentName": "entity.name.function.racket"
         },
@@ -881,11 +914,15 @@
             {
               "begin": "\\|",
               "beginCaptures": {
-                "0": "punctuation.verbatim.begin.racket"
+                "0": {
+                  "name": "punctuation.verbatim.begin.racket"
+                }
               },
               "end": "\\|",
               "endCaptures": {
-                "0": "punctuation.verbatim.end.racket"
+                "0": {
+                  "name": "punctuation.verbatim.end.racket"
+                }
               }
             }
           ]
@@ -904,7 +941,7 @@
     },
     "lambda-onearg": [
       {
-        "name": "meta.lambda.racket",
+        "name": "meta.lambda.onearg.racket",
         "match": "(?x) (?<=[(\\[{]) \\s* (lambda | λ) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)",
         "captures": {
           "1": {
@@ -1091,7 +1128,9 @@
           },
           "end": "\\|",
           "endCaptures": {
-            "0": "punctuation.verbatim.end.racket"
+            "0": {
+              "name": "punctuation.verbatim.end.racket"
+            }
           },
           "contentName": "variable.parameter.racket"
         },
@@ -1111,11 +1150,15 @@
             {
               "begin": "\\|",
               "beginCaptures": {
-                "0": "punctuation.verbatim.begin.racket"
+                "0": {
+                  "name": "punctuation.verbatim.begin.racket"
+                }
               },
               "end": "\\|",
               "endCaptures": {
-                "0": "punctuation.verbatim.end.racket"
+                "0": {
+                  "name": "punctuation.verbatim.end.racket"
+                }
               }
             }
           ]
@@ -1126,13 +1169,13 @@
       "patterns": [
         {
           "name": "meta.struct.fields.racket",
-          "begin": "(?x) (?<=[(\\[{]) \\s* (struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) (?: \\s+ [^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)? \\s* (\\()",
+          "begin": "(?x)(?<=[(\\[{]) \\s*(struct) \\s+([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)(?: \\s+[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)? \\s*(\\()",
           "beginCaptures": {
             "1": {
               "name": "storage.struct.racket"
             },
             "2": {
-              "name": "entity.name.struct.racket"
+              "name": "entity.name.type.struct.racket"
             },
             "3": {
               "name": "punctuation.section.fields.begin.racket"
@@ -1158,13 +1201,13 @@
         },
         {
           "name": "meta.struct.fields.racket",
-          "begin": "(?x) (?<=[(\\[{]) \\s* (struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) (?: \\s+ [^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)? \\s* (\\[)",
+          "begin": "(?x)(?<=[(\\[{]) \\s*(struct) \\s+([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)(?: \\s+[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)? \\s*(\\[)",
           "beginCaptures": {
             "1": {
               "name": "storage.struct.racket"
             },
             "2": {
-              "name": "entity.name.struct.racket"
+              "name": "entity.name.type.struct.racket"
             },
             "3": {
               "name": "punctuation.section.fields.begin.racket"
@@ -1190,13 +1233,13 @@
         },
         {
           "name": "meta.struct.fields.racket",
-          "begin": "(?x) (?<=[(\\[{]) \\s* (struct) \\s+ ([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*) (?: \\s+ [^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)? \\s* (\\{)",
+          "begin": "(?x)(?<=[(\\[{]) \\s*(struct) \\s+([^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)(?: \\s+[^(\\#)\\[\\]{}\",'`;\\s][^()\\[\\]{}\",'`;\\s]*)? \\s*(\\{)",
           "beginCaptures": {
             "1": {
               "name": "storage.struct.racket"
             },
             "2": {
-              "name": "entity.name.struct.racket"
+              "name": "entity.name.type.struct.racket"
             },
             "3": {
               "name": "punctuation.section.fields.begin.racket"
@@ -1371,7 +1414,9 @@
           },
           "end": "\\|",
           "endCaptures": {
-            "0": "punctuation.verbatim.end.racket"
+            "0": {
+              "name": "punctuation.verbatim.end.racket"
+            }
           },
           "contentName": "variable.other.member.racket"
         },
@@ -1391,11 +1436,15 @@
             {
               "begin": "\\|",
               "beginCaptures": {
-                "0": "punctuation.verbatim.begin.racket"
+                "0": {
+                  "name": "punctuation.verbatim.begin.racket"
+                }
               },
               "end": "\\|",
               "endCaptures": {
-                "0": "punctuation.verbatim.end.racket"
+                "0": {
+                  "name": "punctuation.verbatim.end.racket"
+                }
               }
             }
           ]
@@ -1406,7 +1455,7 @@
       "patterns": [
         {
           "name": "punctuation.accessor.racket",
-          "match": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) \\. (?=$|[()\\[\\]{}\",'`;\\s])"
+          "match": "(?x)  \\. (?=$|[()\\[\\]{}\",'`;\\s])"
         }
       ]
     },
@@ -1716,12 +1765,14 @@
           },
           "end": "\\|",
           "endCaptures": {
-            "0": "punctuation.verbatim.end.racket"
+            "0": {
+              "name": "punctuation.verbatim.end.racket"
+            }
           },
           "contentName": "entity.name.constant"
         },
         {
-          "begin": "(?x) (?<=[(\\[{]) \\s*\n  (\\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])\n",
+          "begin": "(?x) (?<=[(\\[{]) \\s*\n  (\\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])",
           "beginCaptures": {
             "1": {
               "name": "entity.name.constant"
@@ -1736,11 +1787,15 @@
             {
               "begin": "\\|",
               "beginCaptures": {
-                "0": "punctuation.verbatim.begin.racket"
+                "0": {
+                  "name": "punctuation.verbatim.begin.racket"
+                }
               },
               "end": "\\|",
               "endCaptures": {
-                "0": "punctuation.verbatim.end.racket"
+                "0": {
+                  "name": "punctuation.verbatim.end.racket"
+                }
               }
             }
           ]
@@ -1767,7 +1822,7 @@
       "patterns": [
         {
           "name": "constant.numeric.racket",
-          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: (?: \\#[dD])?(?: \\#[eEiI])? | (?: \\#[eEiI])?(?: \\#[dD])?)\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n            (?: [+-]? \\d+ \\. \\d+ \\#*) |\n            (?: [+-]? \\d+ \\#* \\. \\#*) |\n            (?: [+-]? \\d+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? \\d+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n            (?: [+-]? \\d+ \\. \\d+ \\#*) |\n            (?: [+-]? \\d+ \\#* \\. \\#*) |\n            (?: [+-]? \\d+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? \\d+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n            (?: [+-]? \\d+ \\. \\d+ \\#*) |\n            (?: [+-]? \\d+ \\#* \\. \\#*) |\n            (?: [+-]? \\d+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? \\d+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n            (?: [+-]? \\d+ \\. \\d+ \\#*) |\n            (?: [+-]? \\d+ \\#* \\. \\#*) |\n            (?: [+-]? \\d+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? \\d+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? \\d+ \\#* \\/ \\d+ \\#*)|\n      (?: [+-]? \\d* \\. \\d+ \\#*) |\n      (?: [+-]? \\d+ \\#* \\. \\#*) |\n      (?: [+-]? \\d+ \\#*)\n    ) (?: [sldefSLDEF] [+-]? \\d+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
+          "match": "(?x)(?<=^|[()\\[\\]{}\",'`;\\s])(?: (?:\\#[dD])?(?: \\#[eEiI])? | (?: \\#[eEiI])?(?: \\#[dD])?)(?: (?: (?: (?: (?: (?: [+-]?\\d+\\#*\\/\\d+\\#*) | (?: [+-]?\\d+\\.\\d+\\#*) | (?: [+-]?\\d+\\#*\\.\\#*) | (?: [+-]?\\d+\\#*)) (?: [sldefSLDEF][+-]?\\d+)?) | [+-](?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])) @ (?: (?: (?: (?: [+-]?\\d+\\#*\\/\\d+\\#*) | (?: [+-]?\\d+\\.\\d+\\#*) | (?: [+-]?\\d+\\#*\\.\\#*) | (?: [+-]?\\d+\\#*)) (?: [sldefSLDEF][+-]?\\d+)?) | [+-](?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]))) | (?: (?: (?: (?: (?: [+-]?\\d+\\#*\\/\\d+\\#*) | (?: [+-]?\\d+\\.\\d+\\#*) | (?: [+-]?\\d+\\#*\\.\\#*) | (?: [+-]?\\d+\\#*)) (?: [sldefSLDEF][+-]?\\d+)?) | [+-](?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]))?[+-](?: (?: (?: (?: [+-]?\\d+\\#*\\/\\d+\\#*) | (?: [+-]?\\d+\\.\\d+\\#*) | (?: [+-]?\\d+\\#*\\.\\#*) | (?: [+-]?\\d+\\#*)) (?: [sldefSLDEF][+-]?\\d+)?) | (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])) i ) | [+-](?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) | (?: (?: [+-]?\\d+\\#*\\/\\d+\\#*) | (?: [+-]?\\d*\\.\\d+\\#*) | (?: [+-]?\\d+\\#*\\.\\#*) | (?: [+-]?\\d+\\#*)) (?: [sldefSLDEF][+-]?\\d+)?)(?=$|[()\\[\\]{}\",'`;\\s])"
         }
       ]
     },
@@ -1775,7 +1830,7 @@
       "patterns": [
         {
           "name": "constant.numeric.octal.racket",
-          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: \\#[oO](?: \\#[eEiI])? | (?: \\#[eEiI])?\\#[oO])\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*)|\n      (?: [+-]? [0-7]* \\. [0-7]+ \\#*) |\n      (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n      (?: [+-]? [0-7]+ \\#*)\n    ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
+          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: \\#[oO](?: \\#[eEiI])? | (?: \\#[eEiI])?\\#[oO])\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\. [0-7]+ \\#*) |\n            (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-7]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? [0-7]+ \\#* \\/ [0-7]+ \\#*) |\n      (?: [+-]? [0-7]* \\. [0-7]+ \\#*) |\n      (?: [+-]? [0-7]+ \\#* \\. \\#*) |\n      (?: [+-]? [0-7]+ \\#*)\n    ) (?: [sldefSLDEF] [+-]? [0-7]+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
         }
       ]
     },
@@ -1783,7 +1838,7 @@
       "patterns": [
         {
           "name": "constant.numeric.bin.racket",
-          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: \\#[bB](?: \\#[eEiI])? | (?: \\#[eEiI])?\\#[bB])\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n         (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*)|\n      (?: [+-]? [01]* \\. [01]+ \\#*) |\n      (?: [+-]? [01]+ \\#* \\. \\#*) |\n      (?: [+-]? [01]+ \\#*)\n    ) (?: [sldefSLDEF] [+-]? [01]+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
+          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: \\#[bB](?: \\#[eEiI])? | (?: \\#[eEiI])?\\#[bB])\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*) |\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*) |\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n         (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*) |\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*) |\n            (?: [+-]? [01]+ \\. [01]+ \\#*) |\n            (?: [+-]? [01]+ \\#* \\. \\#*) |\n            (?: [+-]? [01]+ \\#*)\n          ) (?: [sldefSLDEF] [+-]? [01]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? [01]+ \\#* \\/ [01]+ \\#*) |\n      (?: [+-]? [01]* \\. [01]+ \\#*) |\n      (?: [+-]? [01]+ \\#* \\. \\#*) |\n      (?: [+-]? [01]+ \\#*)\n    ) (?: [sldefSLDEF] [+-]? [01]+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
         }
       ]
     },
@@ -1791,7 +1846,7 @@
       "patterns": [
         {
           "name": "constant.numeric.hex.racket",
-          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: \\#[xX](?: \\#[eEiI])? | (?: \\#[eEiI])?\\#[xX])\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n            (?: [+-]? [0-9a-fA-F] \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n            (?: [+-]? [0-9a-fA-F]+ \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n            (?: [+-]? [0-9a-fA-F]+ \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n            (?: [+-]? [0-9a-fA-F]+ \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*)|\n      (?: [+-]? [0-9a-fA-F]* \\. [0-9a-fA-F]+ \\#*) |\n      (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n      (?: [+-]? [0-9a-fA-F]+ \\#*)\n    ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
+          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: \\#[xX](?: \\#[eEiI])? | (?: \\#[eEiI])?\\#[xX])\n  (?:\n    # Complex numbers with @\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F] \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      ) @\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )\n    ) |\n    # Complex numbers\n    (?:\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f])\n      )? [+-]\n      (?:\n        (?:\n          (?:\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\. [0-9a-fA-F]+ \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n            (?: [+-]? [0-9a-fA-F]+ \\#*)\n          ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n        ) |\n        (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n      ) i\n    ) |\n    [+-] (?: (?: [iI][nN][fF])\\.[0f] | (?: [nN][aA][nN])\\.[0f]) |\n    # Real numbers\n    (?:\n      (?: [+-]? [0-9a-fA-F]+ \\#* \\/ [0-9a-fA-F]+ \\#*) |\n      (?: [+-]? [0-9a-fA-F]* \\. [0-9a-fA-F]+ \\#*) |\n      (?: [+-]? [0-9a-fA-F]+ \\#* \\. \\#*) |\n      (?: [+-]? [0-9a-fA-F]+ \\#*)\n    ) (?: [slSL] [+-]? [0-9a-fA-F]+)?\n  ) (?=$|[()\\[\\]{}\",'`;\\s])"
         }
       ]
     },
@@ -1805,14 +1860,6 @@
         },
         {
           "include": "#comment-sexp"
-        }
-      ]
-    },
-    "comment-sexp": {
-      "patterns": [
-        {
-          "name": "comment.sexp.racket",
-          "match": "(?<=^|[()\\[\\]{}\",'`;\\s])#;"
         }
       ]
     },
@@ -1835,6 +1882,14 @@
               "name": "punctuation.definition.comment.racket"
             }
           }
+        }
+      ]
+    },
+    "comment-sexp": {
+      "patterns": [
+        {
+          "name": "comment.sexp.racket",
+          "match": "(?<=^|[()\\[\\]{}\",'`;\\s])#;"
         }
       ]
     },
@@ -1879,7 +1934,7 @@
           }
         },
         {
-          "begin": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s])\n(?: \\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])\n",
+          "begin": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) (?: \\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])",
           "end": "(?=[()\\[\\]{}\",'`;\\s])",
           "patterns": [
             {
@@ -1922,7 +1977,7 @@
         },
         {
           "contentName": "variable.other.member.racket",
-          "begin": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s])\n(\\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])\n",
+          "begin": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) (\\#% | \\\\\\  | [^\\#()\\[\\]{}\",'`;\\s])",
           "beginCaptures": {
             "1": {
               "name": "variable.other.member.racket"
@@ -1971,7 +2026,7 @@
       "patterns": [
         {
           "name": "entity.name.type.racket",
-          "match": "(?x)\n  (?<=^|[()\\[\\]{}\",'`;\\s])\n  (?: Any | Boolean | Boolean | Char | EmptyList | False | Integer | Natural | Number | Rational | Real | String | Symbol | True)\n  (?=[()\\[\\]{}\",'`;\\s])"
+          "match": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) Any | Boolean | Boolean | Char | EmptyList | False | Integer | Natural | Number | Rational | Real | String | Symbol | True (?=[()\\[\\]{}\",'`;\\s])"
         }
       ]
     },
@@ -2017,19 +2072,15 @@
           "name": "string.quoted.double.racket",
           "begin": "\"",
           "beginCaptures": {
-            "0": [
-              {
-                "name": "punctuation.definition.string.begin.racket"
-              }
-            ]
+            "0": {
+              "name": "punctuation.definition.string.begin.racket"
+            }
           },
           "end": "\"",
           "endCaptures": {
-            "0": [
-              {
-                "name": "punctuation.definition.string.end.racket"
-              }
-            ]
+            "0": {
+              "name": "punctuation.definition.string.end.racket"
+            }
           },
           "patterns": [
             {
@@ -2045,19 +2096,15 @@
           "name": "string.byte.racket",
           "begin": "#\"",
           "beginCaptures": {
-            "0": [
-              {
-                "name": "punctuation.definition.string.begin.racket"
-              }
-            ]
+            "0": {
+              "name": "punctuation.definition.string.begin.racket"
+            }
           },
           "end": "\"",
           "endCaptures": {
-            "0": [
-              {
-                "name": "punctuation.definition.string.end.racket"
-              }
-            ]
+            "0": {
+              "name": "punctuation.definition.string.end.racket"
+            }
           },
           "patterns": [
             {
@@ -2073,19 +2120,15 @@
           "name": "string.regexp.racket",
           "begin": "#(r|p)x\"",
           "beginCaptures": {
-            "0": [
-              {
-                "name": "punctuation.definition.string.begin.racket"
-              }
-            ]
+            "0": {
+              "name": "punctuation.definition.string.begin.racket"
+            }
           },
           "end": "\"",
           "endCaptures": {
-            "0": [
-              {
-                "name": "punctuation.definition.string.end.racket"
-              }
-            ]
+            "0": {
+              "name": "punctuation.definition.string.end.racket"
+            }
           },
           "patterns": [
             {
@@ -2101,19 +2144,15 @@
           "name": "string.regexp.byte.racket",
           "begin": "#(r|p)x#\"",
           "beginCaptures": {
-            "0": [
-              {
-                "name": "punctuation.definition.string.begin.racket"
-              }
-            ]
+            "0": {
+              "name": "punctuation.definition.string.begin.racket"
+            }
           },
           "end": "\"",
           "endCaptures": {
-            "0": [
-              {
-                "name": "punctuation.definition.string.end.racket"
-              }
-            ]
+            "0": {
+              "name": "punctuation.definition.string.end.racket"
+            }
           },
           "patterns": [
             {
@@ -2149,7 +2188,7 @@
       "patterns": [
         {
           "name": "constant.character.escape.racket",
-          "match": "(?x) \\\\\n  (?:\n   (?: [abtnvfre\"'\\\\]) |\n   (?: [0-7]{1,3}) |\n   (?: x[\\da-fA-F]{1,2})\n )"
+          "match": "(?x)\\\\(?:(?: [abtnvfre\"'\\\\]) |(?: [0-7]{1,3}) |(?: x[\\da-fA-F]{1,2}))"
         }
       ]
     },

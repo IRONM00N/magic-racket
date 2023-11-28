@@ -21,7 +21,7 @@
     {
       "open": "|",
       "close": "|",
-      "notIn": ["string"]
+      "notIn": ["string", "comment"]
     },
     {
       "open": "(",
@@ -47,5 +47,10 @@
     ["\"", "\""]
   ],
   "wordPattern": "(-?\\d*\\.\\d\\w*)|([^()[\\]{}\",'`;|\\s#][^()[\\]{}\",'`;|\\s]*)",
-  "folding": { "offSide": true }
+  "folding": { "offSide": true },
+  "colorizedBracketPairs": [
+    ["(", ")"],
+    ["[", "]"],
+    ["{", "}"]
+  ],
 }

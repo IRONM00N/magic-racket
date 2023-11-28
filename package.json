@@ -56,20 +56,6 @@
     },
     "languages": [
       {
-        "id": "racket-sl",
-        "aliases": [
-          "Racket Student Language",
-          "racket student language",
-          "Racket SL",
-          "racket sl"
-        ],
-        "firstLine": "#lang htdp\\/[bia]sl\\+?",
-        "extensions": [
-          ".rkt"
-        ],
-        "configuration": "language-configuration.json"
-      },
-      {
         "id": "racket",
         "aliases": [
           "Racket",
@@ -85,11 +71,6 @@
       {
         "language": "racket",
         "scopeName": "source.racket",
-        "path": "./syntaxes/racket.tmLanguage.json"
-      },
-      {
-        "language": "racket-sl",
-        "scopeName": "source.racket-sl",
         "path": "./syntaxes/racket-sl.tmLanguage.json"
       }
     ],
@@ -265,10 +246,6 @@
     "snippets": [
       {
         "language": "racket",
-        "path": "./snippets/racket.json"
-      },
-      {
-        "language": "racket-sl",
         "path": "./snippets/racket.json"
       }
     ]
