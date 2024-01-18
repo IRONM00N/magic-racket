@@ -27,7 +27,7 @@ const full = (/** @type {string} */ str) => path.join(__dirname, str);
 
 const paths = [
   [full("./src/racket.yaml"), full("./racket.tmLanguage.json")],
-  [full("./src/racket.htdp.yaml"), full("./racket-sl.tmLanguage.json")],
+  [full("./src/racket.original.yaml"), full("./racket.original.tmLanguage.json")],
 ];
 
 (async () => {

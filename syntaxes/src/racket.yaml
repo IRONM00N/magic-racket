@@ -14,9 +14,7 @@
 # $1: { name: $2 }
 
 name: Racket Student Language
-# scopeName: source.racket-sl
 scopeName: source.racket
-firstLineMatch: '#lang htdp/[bia]sl\+?'
 
 filetypes:
   - rkt
@@ -208,6 +206,9 @@ repository:
       - match: !concat [*open_backet, (this|this%) \s+, *end_boundary_la]
         captures:
           '1': { name: keyword.this.racket }
+      - match: !concat [*open_backet, (new) \s+, *end_boundary_la]
+        captures:
+          '1': { name: keyword.operator.new.racket }
       - match: !concat [*open_backet, (send) \s+, *end_boundary_la]
         captures:
           '1': { name: keyword.send.racket }

@@ -1,11 +1,12 @@
 {
   "name": "magic-racket",
-  "displayName": "Magic Racket",
+  "displayName": "Magic Racket Student Language",
   "description": "LSP support, REPL integration, and top notch syntax highlighting for the coolest of Lisps!",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "activationEvents": [
     "onCommand:magic-racket.loadFileInRepl",
     "onCommand:magic-racket.runFile",
+    "onCommand:magic-racket.testFile",
     "onCommand:magic-racket.executeSelectionInRepl",
     "onCommand:magic-racket.openRepl",
     "onCommand:magic-racket.showOutputTerminal",
@@ -21,14 +22,14 @@
     "vscode": "^1.59.0"
   },
   "licence": "SEE LICENSE IN LICENSE",
-  "homepage": "https://github.com/Eugleo/magic-racket/",
+  "homepage": "https://github.com/IRONM00N/magic-racket/",
   "bugs": {
-    "url": "https://github.com/Eugleo/magic-racket/issues",
-    "email": "wybitul.evzen@gmail.com"
+    "url": "https://github.com/IRONM00N/magic-racket/issues",
+    "email": "ironm00n0001@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Eugleo/magic-racket.git"
+    "url": "https://github.com/IRONM00N/magic-racket.git"
   },
   "categories": [
     "Programming Languages",
@@ -41,10 +42,13 @@
     "scheme",
     "repl"
   ],
-  "publisher": "evzen-wybitul",
+  "publisher": "ironm00n",
   "author": {
-    "name": "Evžen Wybitul"
+    "name": "IRONM00N"
   },
+  "contributors": [
+    "Evžen Wybitul"
+  ],
   "contributes": {
     "configurationDefaults": {
       "[racket]": {
@@ -71,7 +75,7 @@
       {
         "language": "racket",
         "scopeName": "source.racket",
-        "path": "./syntaxes/racket-sl.tmLanguage.json"
+        "path": "./syntaxes/racket.tmLanguage.json"
       }
     ],
     "configuration": {

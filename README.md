@@ -1,6 +1,7 @@
-# Magic Racket HTDP for VS Code
+# Magic Racket Student Language for VS Code
 
-This extension adds support for [Racket](http://www.racket-lang.org) to VS Code. With the newly added support for language server protocol, we're proud to say that Magic Racket is **the best** Racket extension for VS Code.
+This extension adds support for [Racket](http://www.racket-lang.org) to VS Code with a focus on 
+the How to Design Programs (HTDP) [Student Languages](https://docs.racket-lang.org/htdp-langs/index.html)
 
 ## Setting up
 
@@ -21,13 +22,20 @@ This extension adds support for [Racket](http://www.racket-lang.org) to VS Code.
     If don't want to use the lang-server at all, you don't have to. Just set `"magicRacket.languageServer.enabled": false` in your configuration file. But note that if you do so, you won't get the “smart” features like autocomplete, formatting, etc.
 4. If you are running VSCode on WSL or a headless Linux server, please see the Troubleshooting section below.
 
+## Changes in this fork
+
+- Grammar definitions are modified to support the HTDP student languages
+- Considers the semantic rather than syntactic meaning for Syntax Highlighting
+- More accurately follows Textmate Grammar naming conventions
+- Supports running HTDP tests with a dedicated button (replaces the REPL button)
+
 ## Features
 
 Magic Racket **does**
 
 - Support Racket LSP through [racket-langserver](https://github.com/jeapostrophe/racket-langserver), which brings jump to definition, hover information, formatting, and more
 - Have nearly complete support for every valid Racket syntax: byte strings, regexps, define clauses, vectors... You name it, we have it
-- Support highlighting of all of the standard functions in `#lang racket`
+- Support highlighting of all of the standard functions in ~~`#lang racket`~~ `#lang htdp/bsl` - `#lang htdp/asl`  
 - Turn many little VS Code knobs and switches to provide you the best possible Racket-writing experience
 
 ...but at the same time **doesn't**:
@@ -38,22 +46,22 @@ Magic Racket **does**
 
 ### LSP Support
 
-Magic Racket now supports [racket-langserver](https://github.com/jeapostrophe/racket-langserver). The current features are:
+This fork of Magic Racket supports [racket-langserver](https://github.com/jeapostrophe/racket-langserver). The current features are:
 
 - Underline errors
 - Jump to definition
 - Find references
 - Hover information
 
-We're working on providing more details in this section: stay tuned!
-
 ### Syntax highlighting
 
-The image shows a comparison of a testing file highlighted using a popular Racket VS Code extension (on the left) and by Magic Racket (on the right).
+<!-- The image shows a comparison of a testing file highlighted using a popular Racket VS Code extension (on the left) and by Magic Racket (on the right).
 
-![Highlighting comparison](images/magic-vs-other.png)
+![Highlighting comparison](images/magic-vs-other.png) -->
 
-As you can see, Magic Racket strives to be _correct_ and _consistent_ — and it supports most of the language features as well. In many ways, this extension was inspired by the highlighting in DrRacket, however, in some aspects it aims to be less minimalistic.
+<!-- As you can see, --> 
+This fork of Magic Racket strives to be _correct_ and _consistent_ — and it supports most of the language features as well. 
+It does not aim to mimic highlighting in DrRacket, but rather to ensure accuracy.
 
 ### REPL support
 
@@ -61,8 +69,7 @@ You can load and execute files in Magic Racket by using the icons in the top rig
 
 In Magic Racket, each file will have its own REPL in which it'll load every time you use the `Racket: Load file in REPL` command. You can choose to mimic this behavior also for `Racket: Run file in terminal`, or you can run all files in one output terminal.
 
-![REPL showcase](images/repl.gif)
-
+<!-- ![REPL showcase](images/repl.gif) -->
 The list of commands added by Magic Racket:
 
 - `Racket: Execute selection in REPL`
@@ -71,6 +78,8 @@ The list of commands added by Magic Racket:
   - Loads the current file into its REPL, creating a new REPL in the process if the file doesn't have one yet. Does have its icon in the top right corner.
 - `Racket: Run file in terminal`
   - Runs the whole file in a terminal, outside of REPL environment. Depending on user settings, the terminal will be either shared among all files (default), or the one that belongs to the file.
+- `Racket: Test file in terminal`
+  - Runs `raco test` on the file
 - `Racket: Open the REPL for the current file`
   - Shows the REPL belonging to the current file, or opens a new one if the file doesn't have one yet.
 - `Racket: Show the output terminal for the current file`

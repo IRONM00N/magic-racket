@@ -1,7 +1,6 @@
 {
   "name": "Racket Student Language",
   "scopeName": "source.racket",
-  "firstLineMatch": "#lang htdp/[bia]sl\\+?",
   "filetypes": [
     "rkt"
   ],
@@ -249,6 +248,14 @@
           "captures": {
             "1": {
               "name": "keyword.this.racket"
+            }
+          }
+        },
+        {
+          "match": "(?x) (?<=[(\\[{]) \\s*(new) \\s+(?=$|[()\\[\\]{}\\\",'`;\\s])",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.new.racket"
             }
           }
         },
